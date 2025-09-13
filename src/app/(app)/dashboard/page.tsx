@@ -22,11 +22,11 @@ const weatherData = {
   location: "Bhopal, MP",
   temperature: "32°C",
   condition: "Sunny",
-  icon: <Sun className="h-8 w-8 text-accent" />,
+  icon: <Sun className="h-10 w-10 text-accent" />,
   forecast: [
-    { day: "Tue", icon: <Sun className="h-5 w-5 text-muted-foreground" /> },
-    { day: "Wed", icon: <Cloudy className="h-5 w-5 text-muted-foreground" /> },
-    { day: "Thu", icon: <CloudRain className="h-5 w-5 text-muted-foreground" /> },
+    { day: "Tue", icon: <Sun className="h-6 w-6 text-muted-foreground" /> },
+    { day: "Wed", icon: <Cloudy className="h-6 w-6 text-muted-foreground" /> },
+    { day: "Thu", icon: <CloudRain className="h-6 w-6 text-muted-foreground" /> },
   ],
 };
 
@@ -69,7 +69,7 @@ export default function DashboardPage() {
           >
             <Link href="/diagnose">
               <div className="flex items-center gap-4">
-                <ImageUp className="h-8 w-8 text-primary" />
+                <ImageUp className="h-10 w-10 text-primary" />
                 <div>
                   <p className="font-semibold">Diagnose Plant</p>
                   <p className="text-sm text-muted-foreground">Upload an image to check health</p>
@@ -84,7 +84,7 @@ export default function DashboardPage() {
           >
             <Link href="/advice">
               <div className="flex items-center gap-4">
-                <BotMessageSquare className="h-8 w-8 text-primary" />
+                <BotMessageSquare className="h-10 w-10 text-primary" />
                 <div>
                   <p className="font-semibold">Get Advice</p>
                   <p className="text-sm text-muted-foreground">Ask our AI for farming tips</p>
@@ -98,7 +98,7 @@ export default function DashboardPage() {
       <Card className="md:col-span-2 lg:col-span-3">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <History className="h-5 w-5" />
+            <History className="h-6 w-6" />
             Recent Activity
           </CardTitle>
           <CardDescription>
@@ -112,8 +112,8 @@ export default function DashboardPage() {
                 key={item.id}
                 className="flex items-start gap-4 rounded-lg border p-4"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
-                  <MessageSquare className="h-6 w-6 text-secondary-foreground" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-secondary">
+                  <MessageSquare className="h-8 w-8 text-secondary-foreground" />
                 </div>
                 <div className="flex-1">
                   <p className="font-semibold truncate">

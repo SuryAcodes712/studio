@@ -137,9 +137,9 @@ export default function AdvicePage() {
                 className={isRecording ? "bg-destructive text-destructive-foreground" : ""}
               >
                 {isRecording ? (
-                  <Square className="h-5 w-5" />
+                  <Square className="h-6 w-6" />
                 ) : (
-                  <Mic className="h-5 w-5" />
+                  <Mic className="h-6 w-6" />
                 )}
                 <span className="sr-only">{isRecording ? "Stop recording" : "Start recording"}</span>
               </Button>
@@ -150,7 +150,7 @@ export default function AdvicePage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-primary" />
+            <Sparkles className="h-6 w-6 text-primary" />
             AI Recommendation
           </CardTitle>
           <CardDescription>

@@ -11,9 +11,9 @@ import { libraryContent } from "@/lib/data";
 import { BookText, Film, FileText } from "lucide-react";
 
 const typeIcons = {
-  article: <BookText className="h-4 w-4" />,
-  video: <Film className="h-4 w-4" />,
-  guide: <FileText className="h-4 w-4" />,
+  article: <BookText className="h-5 w-5" />,
+  video: <Film className="h-5 w-5" />,
+  guide: <FileText className="h-5 w-5" />,
 };
 
 export default function LibraryPage() {

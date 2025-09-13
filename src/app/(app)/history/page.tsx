@@ -23,11 +23,11 @@ export default function HistoryPage() {
             <AccordionTrigger>
               <div className="flex w-full items-center justify-between pr-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-secondary">
                     {item.query.type === "text" ? (
-                      <MessageSquare className="h-6 w-6 text-secondary-foreground" />
+                      <MessageSquare className="h-8 w-8 text-secondary-foreground" />
                     ) : (
-                      <ImageIcon className="h-6 w-6 text-secondary-foreground" />
+                      <ImageIcon className="h-8 w-8 text-secondary-foreground" />
                     )}
                   </div>
                   <span className="flex-1 text-left font-medium">
@@ -35,7 +35,7 @@ export default function HistoryPage() {
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Clock className="h-4 w-4" />
+                  <Clock className="h-5 w-5" />
                   <span>{item.date}</span>
                 </div>
               </div>

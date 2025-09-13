@@ -36,7 +36,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <Link href="/dashboard" className="flex items-center gap-2 font-bold text-lg text-primary font-headline">
-          <Leaf className="h-6 w-6" />
+          <Leaf className="h-7 w-7" />
           <span>Krishi Mitar</span>
         </Link>
       </SidebarHeader>
@@ -54,7 +54,7 @@ export function AppSidebar() {
                 )}
               >
                 <a>
-                  <item.icon className="mr-2 h-5 w-5" />
+                  <item.icon className="mr-2 h-6 w-6" />
                   <span>{item.label}</span>
                 </a>
               </SidebarMenuButton>

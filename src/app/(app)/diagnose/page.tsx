@@ -95,12 +95,12 @@ export default function DiagnosePage() {
                     }}
                     className="absolute right-2 top-2 rounded-full bg-destructive p-1 text-destructive-foreground hover:bg-destructive/80"
                   >
-                    <X className="h-4 w-4" />
+                    <X className="h-5 w-5" />
                   </button>
                 </>
               ) : (
                 <>
-                  <UploadCloud className="mb-2 h-10 w-10 text-muted-foreground" />
+                  <UploadCloud className="mb-2 h-12 w-12 text-muted-foreground" />
                   <p className="font-semibold">Click to upload an image</p>
                   <p className="text-xs text-muted-foreground">
                     PNG, JPG, or WEBP recommended.
@@ -123,7 +123,7 @@ export default function DiagnosePage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-primary" />
+            <Sparkles className="h-6 w-6 text-primary" />
             AI Diagnosis
           </CardTitle>
           <CardDescription>
