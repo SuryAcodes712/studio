@@ -286,22 +286,22 @@ export default function ChatPage() {
                     <span className="sr-only">Attach file</span>
                 </Button>
             </PopoverTrigger>
-             <PopoverContent className="w-48 p-2 mb-2 border-none shadow-xl">
+             <PopoverContent className="w-auto p-2 mb-2 border-none shadow-xl" align="start">
                 <div className="grid grid-cols-2 gap-2">
                     <Button
                         variant="outline"
-                        className="flex flex-col h-24 w-full items-center justify-center gap-2"
+                        className="flex flex-col h-20 w-20 items-center justify-center gap-1"
                         onClick={() => imageInputRef.current?.click()}
                     >
-                       <ImageIcon className="h-8 w-8"/> 
+                       <ImageIcon className="h-6 w-6"/> 
                        <span className="text-xs">Image</span>
                     </Button>
                      <Button
                         variant="outline"
-                        className="flex flex-col h-24 w-full items-center justify-center gap-2"
+                        className="flex flex-col h-20 w-20 items-center justify-center gap-1"
                         onClick={() => docInputRef.current?.click()}
                     >
-                       <FileText className="h-8 w-8"/> 
+                       <FileText className="h-6 w-6"/> 
                        <span className="text-xs">Document</span>
                     </Button>
                 </div>
