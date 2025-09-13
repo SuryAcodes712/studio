@@ -49,20 +49,17 @@ export function AppSidebar() {
           const Icon = navIcons[item.id as keyof typeof navIcons] || LayoutDashboard;
           return (
             <SidebarMenuItem key={item.href}>
-              <Link href={item.href} legacyBehavior passHref>
+              <Link href={item.href}>
                 <SidebarMenuButton
-                  asChild
                   isActive={pathname === item.href}
                   className={cn(
-                    "justify-start",
+                    "justify-start w-full",
                     pathname === item.href &&
                       "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
                   )}
                 >
-                  <a>
                     <Icon className="mr-2 h-7 w-7" />
                     <span>{item.label}</span>
-                  </a>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
