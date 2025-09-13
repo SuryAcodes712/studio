@@ -4,6 +4,7 @@ const translations = {
         description: "Your AI-powered companion for modern farming. Get instant advice, diagnose crop issues, and access a wealth of agricultural knowledge.",
         languageName: "English",
         nav: [
+            { id: 'chat', href: "/chat", label: "Chat" },
             { id: 'advice', href: "/advice", label: "Get Advice" },
             { id: 'dashboard', href: "/dashboard", label: "Dashboard" },
             { id: 'diagnose', href: "/diagnose", label: "Diagnose" },
@@ -15,6 +16,19 @@ const translations = {
             home: "Get Started",
             getAdvice: "Get Advice",
             diagnose: "Diagnose",
+        },
+        chat: {
+            title: "What can I help with?",
+            placeholder: "Ask anything",
+            upload: {
+                title: "Add photos & files",
+                description: "Upload images or PDF documents"
+            },
+            error: {
+                title: "Something went wrong",
+                fileRead: "There was an error reading the file.",
+                noFile: "Please upload a file first.",
+            }
         },
         dashboard: {
             weather: {
@@ -151,6 +165,7 @@ const translations = {
         description: "आधुनिक खेती के लिए आपका एआई-संचालित साथी। तुरंत सलाह प्राप्त करें, फसल की समस्याओं का निदान करें, और कृषि ज्ञान का खजाना प्राप्त करें।",
         languageName: "हिंदी",
         nav: [
+            { id: 'chat', href: "/chat", label: "बातचीत" },
             { id: 'advice', href: "/advice", label: "सलाह लें" },
             { id: 'dashboard', href: "/dashboard", label: "tableau" },
             { id: 'diagnose', href: "/diagnose", label: "निदान" },
@@ -162,6 +177,19 @@ const translations = {
             home: "शुरू हो जाओ",
             getAdvice: "सलाह लें",
             diagnose: "निदान",
+        },
+        chat: {
+            title: "मैं कैसे मदद कर सकता हूँ?",
+            placeholder: "कुछ भी पूछें",
+            upload: {
+                title: "तस्वीरें और फ़ाइलें जोड़ें",
+                description: "छवियां या पीडीएफ दस्तावेज़ अपलोड करें"
+            },
+            error: {
+                title: "कुछ गलत हो गया",
+                fileRead: "फ़ाइल पढ़ने में एक त्रुटि थी।",
+                noFile: "कृपया पहले एक फ़ाइल अपलोड करें।",
+            }
         },
         dashboard: {
             weather: {

@@ -10,6 +10,7 @@ import {
   Lightbulb,
   HeartPulse,
   FileText,
+  MessageSquare,
 } from "lucide-react";
 import {
   Sidebar,
@@ -24,6 +25,7 @@ import { useLanguage } from "@/context/language-context";
 
 
 const navIcons = {
+  chat: MessageSquare,
   advice: Lightbulb,
   dashboard: LayoutDashboard,
   diagnose: HeartPulse,
