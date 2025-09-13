@@ -287,22 +287,22 @@ export default function ChatPage() {
                 </Button>
             </PopoverTrigger>
              <PopoverContent className="w-auto p-2 mb-2 border-none shadow-xl" align="start">
-                <div className="grid grid-cols-2 gap-2">
+                <div className="flex flex-col gap-2">
                     <Button
                         variant="outline"
-                        className="flex flex-col h-20 w-20 items-center justify-center gap-1"
+                        className="flex h-12 w-32 items-center justify-start gap-2 px-3"
                         onClick={() => imageInputRef.current?.click()}
                     >
-                       <ImageIcon className="h-6 w-6"/> 
-                       <span className="text-xs">Image</span>
+                       <ImageIcon className="h-5 w-5"/> 
+                       <span className="text-sm">Image</span>
                     </Button>
                      <Button
                         variant="outline"
-                        className="flex flex-col h-20 w-20 items-center justify-center gap-1"
+                        className="flex h-12 w-32 items-center justify-start gap-2 px-3"
                         onClick={() => docInputRef.current?.click()}
                     >
-                       <FileText className="h-6 w-6"/> 
-                       <span className="text-xs">Document</span>
+                       <FileText className="h-5 w-5"/> 
+                       <span className="text-sm">Document</span>
                     </Button>
                 </div>
             </PopoverContent>
@@ -337,3 +337,5 @@ function X(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+    
