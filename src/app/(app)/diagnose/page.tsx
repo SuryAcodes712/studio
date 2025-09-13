@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { useFormState } from "react-dom";
+import { useState, useEffect, useRef, useActionState } from "react";
 import Image from "next/image";
 import { diagnosePlant, type DiagnosisState } from "@/app/actions";
 import { SubmitButton } from "@/components/submit-button";
@@ -20,7 +19,7 @@ const initialState: DiagnosisState = {};
 
 export default function DiagnosePage() {
   const { t } = useLanguage();
-  const [state, formAction] = useFormState(diagnosePlant, initialState);
+  const [state, formAction] = useActionState(diagnosePlant, initialState);
   const { toast } = useToast();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
