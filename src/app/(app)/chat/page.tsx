@@ -174,7 +174,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] items-center justify-between">
+    <div className="flex flex-col h-[calc(100vh-8rem)] items-center justify-between">
        <div className="w-full flex-1 overflow-hidden">
         <ScrollArea className="h-full" ref={scrollAreaRef}>
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
@@ -272,7 +272,7 @@ export default function ChatPage() {
                 </Alert>
             </div>
         )}
-        <form onSubmit={handleSubmit} className="flex gap-2 items-center bg-background border rounded-full p-1 pl-3">
+        <form onSubmit={handleSubmit} className="flex gap-2 items-center bg-muted/50 border rounded-full p-1 pl-3">
           <Popover>
             <PopoverTrigger asChild>
                 <Button
@@ -337,3 +337,5 @@ function X(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+    
