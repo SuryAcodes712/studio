@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Plus, Send, Sparkles, User, FileText, ImageIcon, Loader2 } from "lucide-react";
+import { Plus, Send, Sparkles, User, FileText, ImageIcon, Loader2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/context/language-context";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -174,9 +174,9 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)] items-center justify-between">
-       <div className="w-full flex-1 overflow-hidden">
-        <ScrollArea className="h-full" ref={scrollAreaRef}>
+     <div className="flex flex-col h-[calc(100vh-8rem)] items-center">
+       <div className="w-full flex-1 overflow-hidden flex flex-col">
+        <ScrollArea className="flex-1" ref={scrollAreaRef}>
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
             {messages.length === 0 && !isPending && (
                 <div className="flex flex-col items-center justify-center h-full text-center pt-24">
@@ -329,13 +329,6 @@ export default function ChatPage() {
   );
 }
 
-function X(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-    </svg>
-  );
-}
+    
 
     
