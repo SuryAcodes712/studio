@@ -89,3 +89,41 @@ export async function getSchemeAnalysis(
     return {error: `Failed to analyze document: ${errorMessage}`};
   }
 }
+
+
+export interface ChatState {
+  response?: string;
+  error?: string;
+}
+
+export async function getChatResponse(
+  prevState: ChatState,
+  formData: FormData,
+): Promise<ChatState> {
+  const query = formData.get('query') as string;
+  const language = formData.get('language') as string;
+  const photoDataUri = formData.get('photoDataUri') as string | null;
+  const documentContent = formData.get('documentContent') as string | null;
+
+  try {
+    if (documentContent) {
+       if (!query) {
+        return { error: 'Please ask a question about the document.' };
+      }
+      const result = await analyzeSchemeDocument({ query, documentContent });
+      return { response: result.answer };
+    }
+    
+    const result = await generateAgriculturalAdvice({
+        query,
+        language,
+        photoDataUri: photoDataUri ?? undefined,
+    });
+    return { response: result.advice };
+
+  } catch (e) {
+    console.error(e);
+    const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
+    return {error: `Failed to get response: ${errorMessage}`};
+  }
+}

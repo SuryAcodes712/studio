@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import Image from "next/image";
-import { getAdvice, getSchemeAnalysis, type AdviceState, type SchemeAnalysisState } from "@/app/actions";
+import { getChatResponse, type ChatState } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -23,8 +23,7 @@ type Message = {
   audioDataUri?: string;
 }
 
-const initialAdviceState: AdviceState = {};
-const initialSchemeState: SchemeAnalysisState = {};
+const initialChatState: ChatState = {};
 
 export default function ChatPage() {
   const { toast } = useToast();
@@ -45,10 +44,13 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({
-        top: scrollAreaRef.current.scrollHeight,
-        behavior: 'smooth'
-      });
+      const viewport = scrollAreaRef.current.querySelector('div[data-radix-scroll-area-viewport]');
+      if (viewport) {
+        viewport.scrollTo({
+          top: viewport.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
     }
   }, [messages]);
 
@@ -119,35 +121,22 @@ export default function ChatPage() {
     setMessages(newMessages);
     setInput("");
     
-    // Clear file after submitting
     const currentFileData = fileData;
     const currentFileType = fileType;
     handleRemoveFile();
 
     startTransition(async () => {
-        let responseState: AdviceState | SchemeAnalysisState | null = null;
-        let responseContent: string | undefined;
-        
         const formData = new FormData();
         formData.append('query', input);
         formData.append('language', language);
 
-        if (currentFileType === 'pdf') {
-            if(!currentFileData) {
-                toast({ variant: 'destructive', title: t('chat.error.title'), description: t('chat.error.noFile')});
-                return;
-            }
+        if (currentFileType === 'pdf' && currentFileData) {
             formData.append('documentContent', currentFileData);
-            responseState = await getSchemeAnalysis(initialSchemeState, formData);
-            responseContent = (responseState as SchemeAnalysisState)?.answer;
-        } else { // Image or text-only query
-            if (currentFileType === 'image' && currentFileData) {
-                formData.append('photoDataUri', currentFileData);
-            }
-            responseState = await getAdvice(initialAdviceState, formData);
-            responseContent = (responseState as AdviceState)?.advice;
+        } else if (currentFileType === 'image' && currentFileData) {
+            formData.append('photoDataUri', currentFileData);
         }
       
+      const responseState = await getChatResponse(initialChatState, formData);
 
       if (responseState?.error) {
         toast({
@@ -158,13 +147,13 @@ export default function ChatPage() {
         setMessages(newMessages); // Revert to user message only
       }
 
-      if (responseContent) {
+      if (responseState?.response) {
         let audioDataUri: string | undefined;
         if (language !== 'en') {
-             const ttsResult = await textToSpeech({ text: responseContent });
+             const ttsResult = await textToSpeech({ text: responseState.response });
              audioDataUri = ttsResult.audioDataUri;
         }
-        setMessages([...newMessages, { role: 'assistant', content: responseContent, audioDataUri: audioDataUri }]);
+        setMessages([...newMessages, { role: 'assistant', content: responseState.response, audioDataUri: audioDataUri }]);
         if (audioDataUri) {
              const audio = new Audio(audioDataUri);
              audio.play();
@@ -175,7 +164,6 @@ export default function ChatPage() {
 
   return (
      <div className="flex flex-col h-full w-full">
-       <div className="flex-1 overflow-hidden flex flex-col">
         <ScrollArea className="flex-1" ref={scrollAreaRef}>
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
             {messages.length === 0 && !isPending && (
@@ -245,8 +233,6 @@ export default function ChatPage() {
               )}
           </div>
         </ScrollArea>
-      </div>
-
       <div className="w-full max-w-3xl p-4 border-t border-transparent mx-auto">
         {fileName && (
             <div className="mb-2">
