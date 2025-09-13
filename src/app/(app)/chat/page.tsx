@@ -183,7 +183,7 @@ export default function ChatPage() {
                     </AvatarFallback>
                   </Avatar>
                 )}
-                <div className={`rounded-lg p-4 max-w-[80%] ${message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+                <div className={`rounded-lg p-4 ${message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
                   {message.imagePreview && (
                     <Image src={message.imagePreview} alt="User upload" width={200} height={200} className="rounded-md mb-2" />
                   )}
@@ -233,7 +233,7 @@ export default function ChatPage() {
               )}
           </div>
         </ScrollArea>
-      <div className="w-full max-w-3xl p-4 mx-auto mb-2">
+      <div className="w-full max-w-3xl p-4 mx-auto mb-4">
         {fileName && (
             <div className="mb-2">
                 <Alert>
@@ -314,3 +314,5 @@ export default function ChatPage() {
     </div>
   );
 }
+
+    
