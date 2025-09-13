@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -41,6 +41,11 @@ export function AppHeader({ title }: AppHeaderProps) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const userAvatar = PlaceHolderImages.find((img) => img.id === "user-avatar");
   const pathname = usePathname();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleLanguageChange = (langCode: string) => {
     setLanguage(langCode);
@@ -54,14 +59,17 @@ export function AppHeader({ title }: AppHeaderProps) {
           <SidebarTrigger />
         </div>
         
-        {pathname === '/chat' ? (
-           <Link href="/dashboard" className="flex items-center gap-2 font-bold text-lg text-primary font-headline">
-              <Leaf className="h-8 w-8" />
-              <span>{t('name')}</span>
-            </Link>
-        ) : (
-          <h1 className="text-xl font-semibold md:text-2xl font-headline">{title}</h1>
-        )}
+        <div className="flex-1">
+          {isClient && pathname === '/chat' ? (
+            <Link href="/dashboard" className="flex items-center gap-2 font-bold text-lg text-primary font-headline">
+                <Leaf className="h-8 w-8" />
+                <span>{t('name')}</span>
+              </Link>
+          ) : (
+            <h1 className="text-xl font-semibold md:text-2xl font-headline">{title}</h1>
+          )}
+        </div>
+
 
         <div className="ml-auto flex items-center gap-4">
           <DropdownMenu>

@@ -5,7 +5,6 @@ import { AppHeader } from "@/components/app-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/context/language-context';
-import { redirect } from 'next/navigation';
 
 
 export default function AppLayout({
@@ -16,11 +15,8 @@ export default function AppLayout({
   const pathname = usePathname();
   const { t } = useLanguage();
   
-  if (pathname === '/') {
-    redirect('/advice');
-  }
   const navItems: any[] = t('nav', { returnObjects: true });
-  const navItem = navItems.find(item => `/${item.href}` === pathname);
+  const navItem = navItems.find(item => item.href === pathname);
   const title = navItem ? navItem.label : t('nav.0.label');
 
   return (
