@@ -13,7 +13,6 @@ import { useLanguage } from "@/context/language-context";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { textToSpeech } from "@/ai/flows/text-to-speech";
 
 type Message = {
   role: 'user' | 'assistant';
@@ -44,6 +43,7 @@ export default function ChatPage() {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const docInputRef = useRef<HTMLInputElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // State for uploaded file
   const [fileData, setFileData] = useState<string | null>(null);
@@ -225,15 +225,10 @@ export default function ChatPage() {
       }
 
       if (responseState?.response) {
-        let audioDataUri: string | undefined;
-        if (language !== 'en') {
-             const ttsResult = await textToSpeech({ text: responseState.response });
-             audioDataUri = ttsResult.audioDataUri;
-        }
-        setMessages([...newMessages, { role: 'assistant', content: responseState.response, audioDataUri: audioDataUri }]);
-        if (audioDataUri) {
-             const audio = new Audio(audioDataUri);
-             audio.play();
+        setMessages([...newMessages, { role: 'assistant', content: responseState.response, audioDataUri: responseState.audioDataUri }]);
+        if (responseState.audioDataUri && audioRef.current) {
+            audioRef.current.src = responseState.audioDataUri;
+            audioRef.current.play().catch(e => console.error("Audio playback failed:", e));
         }
       }
     });
@@ -400,8 +395,7 @@ export default function ChatPage() {
           </Button>
         </form>
       </div>
+      <audio ref={audioRef} className="hidden" />
     </div>
   );
 }
-
-    

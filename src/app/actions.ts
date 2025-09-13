@@ -94,6 +94,7 @@ export async function getSchemeAnalysis(
 export interface ChatState {
   response?: string;
   error?: string;
+  audioDataUri?: string;
 }
 
 export async function getChatResponse(
@@ -106,20 +107,30 @@ export async function getChatResponse(
   const documentContent = formData.get('documentContent') as string | null;
 
   try {
+    let responseText: string;
+
     if (documentContent) {
-       if (!query) {
+      if (!query) {
         return { error: 'Please ask a question about the document.' };
       }
+      // Assuming analyzeSchemeDocument can be modified to accept a language preference
       const result = await analyzeSchemeDocument({ query, documentContent });
-      return { response: result.answer };
+      responseText = result.answer;
+    } else {
+      const result = await generateAgriculturalAdvice({
+          query,
+          language,
+          photoDataUri: photoDataUri ?? undefined,
+      });
+      responseText = result.advice;
     }
     
-    const result = await generateAgriculturalAdvice({
-        query,
-        language,
-        photoDataUri: photoDataUri ?? undefined,
-    });
-    return { response: result.advice };
+    if (language !== 'en' && responseText) {
+      const ttsResult = await textToSpeech({ text: responseText });
+      return { response: responseText, audioDataUri: ttsResult.audioDataUri };
+    }
+
+    return { response: responseText };
 
   } catch (e) {
     console.error(e);

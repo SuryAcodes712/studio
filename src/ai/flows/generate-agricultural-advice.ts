@@ -37,13 +37,13 @@ const prompt = ai.definePrompt({
   name: 'generateAgriculturalAdvicePrompt',
   input: {schema: GenerateAgriculturalAdviceInputSchema},
   output: {schema: GenerateAgriculturalAdviceOutputSchema},
-  prompt: `You are an expert agricultural advisor. A farmer has asked the following question: {{{query}}}. Provide helpful, context-aware advice to the farmer to help them make informed decisions about their crops.
+  prompt: `You are an expert agricultural advisor for Indian farmers. A farmer has asked the following question: {{{query}}}. Provide helpful, context-aware advice to the farmer to help them make informed decisions about their crops.
   {{#if photoDataUri}}
   Analyze the following image as part of your assessment:
   Photo: {{media url=photoDataUri}}
   {{/if}}
   {{#if language}}
-  Please provide the answer in the following language: {{{language}}}.
+  Your response MUST be in the following language: {{{language}}}.
   {{/if}}
   `,
 });
