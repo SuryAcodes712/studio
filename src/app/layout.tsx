@@ -1,6 +1,21 @@
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster";
+import { Playfair_Display, PT_Sans } from "next/font/google";
+import { cn } from "@/lib/utils";
 import "./globals.css";
+
+const fontSans = PT_Sans({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-body",
+});
+
+const fontSerif = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-headline",
+});
+
 
 export const metadata: Metadata = {
   title: "Krishi Mitar",
@@ -14,15 +29,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=PT+Sans:wght@400;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="font-body antialiased">
+      <body className={cn(
+        "font-body antialiased",
+        fontSans.variable,
+        fontSerif.variable
+      )}>
         {children}
         <Toaster />
       </body>
