@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import {
   BookOpen,
   History,
-  Home,
   LayoutDashboard,
   Leaf,
   Lightbulb,
@@ -20,14 +19,16 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/lib/site-config";
 
-const navItems = [
-  { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/diagnose", icon: HeartPulse, label: "Diagnose" },
-  { href: "/advice", icon: Lightbulb, label: "Get Advice" },
-  { href: "/library", icon: BookOpen, label: "Library" },
-  { href: "/history", icon: History, label: "History" },
-];
+const navIcons = {
+  dashboard: LayoutDashboard,
+  diagnose: HeartPulse,
+  advice: Lightbulb,
+  library: BookOpen,
+  history: History,
+} as const;
+
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -36,31 +37,34 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <Link href="/dashboard" className="flex items-center gap-2 font-bold text-lg text-primary font-headline">
-          <Leaf className="h-7 w-7" />
-          <span>Krishi Mitar</span>
+          <Leaf className="h-8 w-8" />
+          <span>{siteConfig.name}</span>
         </Link>
       </SidebarHeader>
       <SidebarMenu>
-        {navItems.map((item) => (
-          <SidebarMenuItem key={item.href}>
-            <Link href={item.href} legacyBehavior passHref>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === item.href}
-                className={cn(
-                  "justify-start",
-                  pathname === item.href &&
-                    "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
-                )}
-              >
-                <a>
-                  <item.icon className="mr-2 h-6 w-6" />
-                  <span>{item.label}</span>
-                </a>
-              </SidebarMenuButton>
-            </Link>
-          </SidebarMenuItem>
-        ))}
+        {siteConfig.nav.map((item) => {
+          const Icon = navIcons[item.id as keyof typeof navIcons] || LayoutDashboard;
+          return (
+            <SidebarMenuItem key={item.href}>
+              <Link href={item.href} legacyBehavior passHref>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === item.href}
+                  className={cn(
+                    "justify-start",
+                    pathname === item.href &&
+                      "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                  )}
+                >
+                  <a>
+                    <Icon className="mr-2 h-7 w-7" />
+                    <span>{item.label}</span>
+                  </a>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
+          )
+        })}
       </SidebarMenu>
       <SidebarFooter>
          {/* Footer content can go here */}

@@ -12,9 +12,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { UploadCloud, X, AlertCircle, Sparkles } from "lucide-react";
+import { UploadCloud, X, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { siteConfig } from "@/lib/site-config";
 
 const initialState: DiagnosisState = {};
 
@@ -29,7 +29,7 @@ export default function DiagnosePage() {
     if (state.error) {
       toast({
         variant: "destructive",
-        title: "Diagnosis Failed",
+        title: siteConfig.diagnose.error.title,
         description: state.error,
       });
     }
@@ -58,10 +58,9 @@ export default function DiagnosePage() {
     <div className="grid gap-6 lg:grid-cols-2">
       <Card>
         <CardHeader>
-          <CardTitle>Diagnose Plant Health</CardTitle>
+          <CardTitle>{siteConfig.diagnose.title}</CardTitle>
           <CardDescription>
-            Upload a clear picture of an affected plant leaf or area to get an
-            AI-powered diagnosis.
+            {siteConfig.diagnose.description}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -85,7 +84,7 @@ export default function DiagnosePage() {
                     className="mb-4 max-h-48 w-auto rounded-md object-contain"
                   />
                   <p className="text-sm text-muted-foreground">
-                    Image selected. Click to change.
+                    {siteConfig.diagnose.image.change}
                   </p>
                   <button
                     type="button"
@@ -93,17 +92,17 @@ export default function DiagnosePage() {
                       e.stopPropagation();
                       handleRemoveImage();
                     }}
-                    className="absolute right-2 top-2 rounded-full bg-destructive p-1 text-destructive-foreground hover:bg-destructive/80"
+                    className="absolute right-2 top-2 rounded-full bg-destructive p-1.5 text-destructive-foreground hover:bg-destructive/80"
                   >
-                    <X className="h-5 w-5" />
+                    <X className="h-6 w-6" />
                   </button>
                 </>
               ) : (
                 <>
-                  <UploadCloud className="mb-2 h-12 w-12 text-muted-foreground" />
-                  <p className="font-semibold">Click to upload an image</p>
+                  <UploadCloud className="mb-2 h-14 w-14 text-muted-foreground" />
+                  <p className="font-semibold">{siteConfig.diagnose.image.upload}</p>
                   <p className="text-xs text-muted-foreground">
-                    PNG, JPG, or WEBP recommended.
+                    {siteConfig.diagnose.image.formats}
                   </p>
                 </>
               )}
@@ -115,7 +114,9 @@ export default function DiagnosePage() {
                 onChange={handleFileChange}
               />
             </div>
-            <SubmitButton className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">Diagnose</SubmitButton>
+            <SubmitButton className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6">
+              {siteConfig.cta.diagnose}
+            </SubmitButton>
           </form>
         </CardContent>
       </Card>
@@ -123,11 +124,11 @@ export default function DiagnosePage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-primary" />
-            AI Diagnosis
+            <Sparkles className="h-8 w-8 text-primary" />
+            {siteConfig.diagnose.results.title}
           </CardTitle>
           <CardDescription>
-            The analysis of your plant will appear here.
+            {siteConfig.diagnose.results.description}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -141,7 +142,7 @@ export default function DiagnosePage() {
           ) : (
             <div className="flex h-48 items-center justify-center rounded-lg border border-dashed">
               <p className="text-muted-foreground">
-                Waiting for image submission...
+                {siteConfig.diagnose.results.waiting}
               </p>
             </div>
           )}

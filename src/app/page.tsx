@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { siteConfig } from "@/lib/site-config";
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find((img) => img.id === "hero-background");
@@ -21,14 +22,14 @@ export default function Home() {
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center text-center">
         <main className="container mx-auto flex flex-col items-center justify-center gap-6 px-4 py-16">
           <h1 className="text-5xl font-bold tracking-tight text-primary md:text-7xl lg:text-8xl font-headline">
-            Krishi Mitar
+            {siteConfig.name}
           </h1>
           <p className="max-w-2xl text-lg text-foreground/80 md:text-xl">
-            Your AI-powered companion for modern farming. Get instant advice, diagnose crop issues, and access a wealth of agricultural knowledge.
+            {siteConfig.description}
           </p>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
             <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
-              <Link href="/dashboard">Get Started</Link>
+              <Link href="/dashboard">{siteConfig.cta.home}</Link>
             </Button>
           </div>
         </main>

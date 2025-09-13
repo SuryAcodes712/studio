@@ -9,21 +9,21 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { libraryContent } from "@/lib/data";
 import { BookText, Film, FileText } from "lucide-react";
+import { siteConfig } from "@/lib/site-config";
 
 const typeIcons = {
-  article: <BookText className="h-5 w-5" />,
-  video: <Film className="h-5 w-5" />,
-  guide: <FileText className="h-5 w-5" />,
+  article: <BookText className="h-6 w-6" />,
+  video: <Film className="h-6 w-6" />,
+  guide: <FileText className="h-6 w-6" />,
 };
 
 export default function LibraryPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold font-headline">Content Library</h1>
+        <h1 className="text-3xl font-bold font-headline">{siteConfig.library.title}</h1>
         <p className="text-muted-foreground">
-          Browse articles, guides, and videos to enhance your farming
-          knowledge.
+          {siteConfig.library.description}
         </p>
       </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -46,7 +46,7 @@ export default function LibraryPage() {
             <CardContent className="flex flex-1 flex-col p-4">
               <Badge
                 variant="secondary"
-                className="mb-2 flex w-fit items-center gap-1"
+                className="mb-2 flex w-fit items-center gap-1.5 py-1 px-3"
               >
                 {typeIcons[item.type]}
                 <span className="capitalize">{item.type}</span>

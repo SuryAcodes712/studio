@@ -20,8 +20,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Mic, Square, Play } from "lucide-react";
+import { Sparkles, Mic, Square } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { siteConfig } from "@/lib/site-config";
 
 const initialState: AdviceState = {};
 
@@ -37,7 +38,7 @@ export default function AdvicePage() {
     if (state.error) {
       toast({
         variant: "destructive",
-        title: "Failed to get advice",
+        title: siteConfig.advice.error.title,
         description: state.error,
       });
     }
@@ -61,8 +62,8 @@ export default function AdvicePage() {
       if (!SpeechRecognition) {
         toast({
           variant: "destructive",
-          title: "Voice search not supported",
-          description: "Your browser does not support voice recognition.",
+          title: siteConfig.advice.error.voiceNotSupported.title,
+          description: siteConfig.advice.error.voiceNotSupported.description,
         });
         return;
       }
@@ -96,52 +97,49 @@ export default function AdvicePage() {
     <div className="grid gap-6 lg:grid-cols-2">
       <Card>
         <CardHeader>
-          <CardTitle>Get Agricultural Advice</CardTitle>
+          <CardTitle>{siteConfig.advice.title}</CardTitle>
           <CardDescription>
-            Ask our AI assistant any question about farming, crops, pests, or
-            market conditions. Use your voice or type your question below.
+            {siteConfig.advice.description}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form ref={formRef} action={formAction} className="space-y-4">
             <Select name="language" defaultValue="en">
-              <SelectTrigger>
-                <SelectValue placeholder="Select language" />
+              <SelectTrigger className="text-base">
+                <SelectValue placeholder={siteConfig.advice.language.placeholder} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="en">English</SelectItem>
-                <SelectItem value="hi">Hindi</SelectItem>
-                <SelectItem value="te">Telugu</SelectItem>
-                <SelectItem value="mr">Marathi</SelectItem>
-                <SelectItem value="ta">Tamil</SelectItem>
+                {siteConfig.advice.language.options.map(lang => (
+                  <SelectItem key={lang.value} value={lang.value}>{lang.label}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
 
             <Textarea
               name="query"
-              placeholder="e.g., 'What is the best way to prevent blight on tomato plants?'"
+              placeholder={siteConfig.advice.placeholder}
               className="min-h-[150px] text-base"
               required
               value={transcript}
               onChange={(e) => setTranscript(e.target.value)}
             />
-            <div className="flex gap-2">
-              <SubmitButton className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                Get Advice
+            <div className="flex flex-col sm:flex-row gap-2">
+              <SubmitButton className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6">
+                {siteConfig.cta.getAdvice}
               </SubmitButton>
               <Button
                 type="button"
                 variant="outline"
                 size="icon"
                 onClick={handleToggleRecording}
-                className={isRecording ? "bg-destructive text-destructive-foreground" : ""}
+                className={`w-full sm:w-auto h-auto px-4 py-2 ${isRecording ? "bg-destructive text-destructive-foreground" : ""}`}
               >
                 {isRecording ? (
-                  <Square className="h-6 w-6" />
+                  <Square className="h-8 w-8" />
                 ) : (
-                  <Mic className="h-6 w-6" />
+                  <Mic className="h-8 w-8" />
                 )}
-                <span className="sr-only">{isRecording ? "Stop recording" : "Start recording"}</span>
+                <span className="sr-only">{isRecording ? siteConfig.advice.voice.stop : siteConfig.advice.voice.start}</span>
               </Button>
             </div>
           </form>
@@ -150,11 +148,11 @@ export default function AdvicePage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-primary" />
-            AI Recommendation
+            <Sparkles className="h-8 w-8 text-primary" />
+            {siteConfig.advice.results.title}
           </CardTitle>
           <CardDescription>
-            The advice from our AI will appear here.
+            {siteConfig.advice.results.description}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -162,7 +160,7 @@ export default function AdvicePage() {
             <div className="space-y-4">
               {state.audioDataUri && (
                 <audio controls src={state.audioDataUri} className="w-full">
-                  Your browser does not support the audio element.
+                  {siteConfig.advice.results.audioNotSupported}
                 </audio>
               )}
               <div
@@ -175,7 +173,7 @@ export default function AdvicePage() {
           ) : (
             <div className="flex h-48 items-center justify-center rounded-lg border border-dashed">
               <p className="text-muted-foreground">
-                Waiting for your question...
+                {siteConfig.advice.results.waiting}
               </p>
             </div>
           )}
