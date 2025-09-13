@@ -1,6 +1,6 @@
 const translations = {
     en: {
-        name: "Krishi Mitar",
+        name: "Krishi Mitra AI",
         description: "Your AI-powered companion for modern farming. Get instant advice, diagnose crop issues, and access a wealth of agricultural knowledge.",
         nav: [
             { id: 'advice', href: "/advice", label: "Get Advice" },
@@ -134,7 +134,7 @@ const translations = {
         guide: "Guide",
     },
     hi: {
-        name: "कृषि मित्र",
+        name: "कृषि मित्र एआई",
         description: "आधुनिक खेती के लिए आपका एआई-संचालित साथी। तुरंत सलाह प्राप्त करें, फसल की समस्याओं का निदान करें, और कृषि ज्ञान का खजाना प्राप्त करें।",
         nav: [
             { id: 'advice', href: "/advice", label: "सलाह लें" },
@@ -274,7 +274,7 @@ export type LanguageCode = keyof typeof translations;
 
 export const availableLanguages = Object.keys(translations).map(code => ({
     code,
-    name: code === 'en' ? 'English' : 'हिंदी'
+    name: translations[code as LanguageCode].header.settings.language,
 }));
 
 export function getTranslations(lang: LanguageCode): Translations {

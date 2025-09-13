@@ -19,7 +19,7 @@ const fontSerif = Playfair_Display({
 
 
 export const metadata: Metadata = {
-  title: "Krishi Mitar",
+  title: "Krishi Mitra AI",
   description: "AI-powered assistant for farmers",
 };
 
