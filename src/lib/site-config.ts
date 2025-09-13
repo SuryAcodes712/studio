@@ -2,9 +2,9 @@ export const siteConfig = {
     name: "Krishi Mitar",
     description: "Your AI-powered companion for modern farming. Get instant advice, diagnose crop issues, and access a wealth of agricultural knowledge.",
     nav: [
+        { id: 'advice', href: "/advice", label: "Get Advice" },
         { id: 'dashboard', href: "/dashboard", label: "Dashboard" },
         { id: 'diagnose', href: "/diagnose", label: "Diagnose" },
-        { id: 'advice', href: "/advice", label: "Get Advice" },
         { id: 'library', href: "/library", label: "Library" },
         { id: 'history', href: "/history", label: "History" },
     ],
@@ -52,9 +52,9 @@ export const siteConfig = {
         }
     },
     advice: {
-        title: "Get Agricultural Advice",
-        description: "Ask our AI assistant any question about farming, crops, pests, or market conditions. Use your voice or type your question below.",
-        placeholder: "e.g., 'What is the best way to prevent blight on tomato plants?'",
+        title: "AI Farm Advisor",
+        description: "Ask questions and get instant agricultural advice.",
+        placeholder: "e.g., 'How to prevent blight on tomato plants?'",
         language: {
             placeholder: "Select language",
             options: [
@@ -72,7 +72,7 @@ export const siteConfig = {
         results: {
             title: "AI Recommendation",
             description: "The advice from our AI will appear here.",
-            waiting: "Waiting for your question...",
+            waiting: "Ask a question to get started...",
             audioNotSupported: "Your browser does not support the audio element.",
         },
         error: {

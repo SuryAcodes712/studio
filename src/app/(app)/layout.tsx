@@ -3,6 +3,8 @@ import { AppHeader } from "@/components/app-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { headers } from 'next/headers';
 import { siteConfig } from '@/lib/site-config';
+import { redirect } from 'next/navigation'
+
 
 export default function AppLayout({
   children,
@@ -11,8 +13,12 @@ export default function AppLayout({
 }) {
   const pathname = headers().get('next-url') || '';
   
-  const navItem = siteConfig.nav.find(item => item.href === pathname);
-  const title = navItem ? navItem.label : 'Dashboard';
+  if (pathname === '/') {
+    redirect('/advice');
+  }
+
+  const navItem = siteConfig.nav.find(item => `/$(item.href}`.startsWith(pathname));
+  const title = navItem ? navItem.label : 'Advice';
 
   return (
     <SidebarProvider>
