@@ -337,5 +337,3 @@ function X(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-
-    
