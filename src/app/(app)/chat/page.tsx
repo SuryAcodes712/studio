@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Plus, Send, Sparkles, User, FileText, ImageIcon, Loader2, X } from "lucide-react";
+import { Plus, Send, Sparkles, User, FileText, ImageIcon, Loader2, X, Mic, MicOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/context/language-context";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -25,6 +25,16 @@ type Message = {
 
 const initialChatState: ChatState = {};
 
+// For Speech Recognition
+let recognition: SpeechRecognition | null = null;
+if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+}
+
+
 export default function ChatPage() {
   const { toast } = useToast();
   const { t, language } = useLanguage();
@@ -39,6 +49,7 @@ export default function ChatPage() {
   const [fileData, setFileData] = useState<string | null>(null);
   const [fileType, setFileType] = useState<'image' | 'pdf' | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [isListening, setIsListening] = useState(false);
 
   const userAvatar = PlaceHolderImages.find((img) => img.id === "user-avatar");
 
@@ -53,6 +64,67 @@ export default function ChatPage() {
       }
     }
   }, [messages]);
+
+    useEffect(() => {
+    if (!recognition) return;
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      let finalTranscript = '';
+      let interimTranscript = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        } else {
+          interimTranscript += event.results[i][0].transcript;
+        }
+      }
+      setInput(input + finalTranscript + interimTranscript);
+    };
+    
+    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+        let description = event.error;
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+            description = "Microphone access was denied. Please allow microphone access in your browser settings.";
+        }
+      toast({
+        variant: "destructive",
+        title: "Voice recognition error",
+        description: description,
+      });
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    return () => {
+        if (recognition) {
+            recognition.stop();
+        }
+    }
+  }, [input, toast]);
+
+    const handleVoiceRecording = () => {
+    if (!recognition) {
+        toast({
+            variant: "destructive",
+            title: t('advice.error.voiceNotSupported.title'),
+            description: t('advice.error.voiceNotSupported.description'),
+        });
+        return;
+    }
+
+    if (isListening) {
+      recognition.stop();
+      setIsListening(false);
+    } else {
+      setInput("");
+      recognition.lang = language;
+      recognition.start();
+      setIsListening(true);
+    }
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -109,6 +181,11 @@ export default function ChatPage() {
     e.preventDefault();
     if (!input.trim() && !fileData) return;
 
+    if(isListening) {
+        recognition?.stop();
+        setIsListening(false);
+    }
+    
     let userMessage: Message = { role: 'user', content: input };
     if (fileType === 'image' && fileData) {
         userMessage.imagePreview = fileData;
@@ -300,11 +377,23 @@ export default function ChatPage() {
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={t('chat.placeholder')}
+            placeholder={isListening ? "Listening..." : t('chat.placeholder')}
             className="flex-1 text-base bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
             disabled={isPending}
           />
-
+        {recognition && (
+          <Button
+            type="button"
+            variant={isListening ? "destructive" : "ghost"}
+            size="icon"
+            className="rounded-full flex-shrink-0"
+            onClick={handleVoiceRecording}
+            disabled={isPending}
+          >
+            {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+            <span className="sr-only">{isListening ? "Stop listening" : "Start listening"}</span>
+          </Button>
+        )}
           <Button type="submit" size="icon" className="rounded-full flex-shrink-0" disabled={isPending || (!input.trim() && !fileData)}>
             <Send className="h-5 w-5" />
             <span className="sr-only">Send</span>
