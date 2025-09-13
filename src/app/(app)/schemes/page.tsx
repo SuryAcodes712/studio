@@ -41,10 +41,13 @@ export default function SchemesPage() {
 
   useEffect(() => {
     if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({
-        top: scrollAreaRef.current.scrollHeight,
-        behavior: 'smooth'
-      });
+      const viewport = scrollAreaRef.current.querySelector('div[data-radix-scroll-area-viewport]');
+      if (viewport) {
+        viewport.scrollTo({
+          top: viewport.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
     }
   }, [messages]);
 
@@ -68,18 +71,18 @@ export default function SchemesPage() {
     formData.append('documentContent', documentContent);
     
     startTransition(async () => {
-      const state = await getSchemeAnalysis(initialState, formData);
+      const result = await getSchemeAnalysis(initialState, formData);
 
-      if (state.error) {
+      if (result.error) {
         toast({
           variant: "destructive",
           title: t('schemes.error.title'),
-          description: state.error,
+          description: result.error,
         });
         setMessages(newMessages);
       }
-      if (state.answer) {
-        setMessages([...newMessages, { role: 'assistant', content: state.answer }]);
+      if (result.answer) {
+        setMessages([...newMessages, { role: 'assistant', content: result.answer }]);
       }
     });
   };
@@ -142,9 +145,11 @@ export default function SchemesPage() {
       <CardContent className="flex-1 overflow-hidden">
         <ScrollArea className="h-full" ref={scrollAreaRef}>
           <div className="space-y-6 pr-4">
-            {messages.length === 0 && (
-              <div className="flex h-full items-center justify-center rounded-lg border border-dashed">
-                <p className="text-muted-foreground">{t('schemes.results.waiting')}</p>
+            {messages.length === 0 && !isPending && (
+              <div className="flex h-full items-center justify-center rounded-lg border border-dashed py-24">
+                <div className="text-center">
+                  <p className="text-muted-foreground">{t('schemes.results.waiting')}</p>
+                </div>
               </div>
             )}
             {messages.map((message, index) => (
@@ -229,7 +234,7 @@ export default function SchemesPage() {
             onChange={(e) => setInput(e.target.value)}
             placeholder={t('schemes.placeholder')}
             className="flex-1 text-base"
-            disabled={isPending}
+            disabled={isPending || !documentName}
           />
           <Button type="submit" size="icon" disabled={isPending || !input.trim() || !documentContent}>
             <Send className="h-6 w-6" />
