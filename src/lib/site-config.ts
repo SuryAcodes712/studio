@@ -5,7 +5,6 @@ const translations = {
         languageName: "English",
         nav: [
             { id: 'chat', href: "/chat", label: "Chat" },
-            { id: 'advice', href: "/advice", label: "Get Advice" },
             { id: 'dashboard', href: "/dashboard", label: "Dashboard" },
             { id: 'diagnose', href: "/diagnose", label: "Diagnose" },
             { id: 'library', href: "/library", label: "Library" },
@@ -41,7 +40,7 @@ const translations = {
                     description: "Upload an image to check health",
                 },
                 advice: {
-                    title: "Get Advice",
+                    title: "Chat with AI",
                     description: "Ask our AI for farming tips",
                 },
             },
@@ -154,7 +153,6 @@ const translations = {
         languageName: "हिंदी",
         nav: [
             { id: 'chat', href: "/chat", label: "बातचीत" },
-            { id: 'advice', href: "/advice", label: "सलाह लें" },
             { id: 'dashboard', href: "/dashboard", label: "tableau" },
             { id: 'diagnose', href: "/diagnose", label: "निदान" },
             { id: 'library', href: "/library", label: "पुस्तकालय" },
@@ -190,7 +188,7 @@ const translations = {
                     description: "स्वास्थ्य जांचने के लिए एक छवि अपलोड करें",
                 },
                 advice: {
-                    title: "सलाह लें",
+                    title: "एआई से चैट करें",
                     description: "खेती युक्तियों के लिए हमारे एआई से पूछें",
                 },
             },
