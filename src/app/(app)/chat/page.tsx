@@ -174,8 +174,8 @@ export default function ChatPage() {
   };
 
   return (
-     <div className="flex flex-col h-[calc(100vh-8rem)] items-center">
-       <div className="w-full flex-1 overflow-hidden flex flex-col">
+     <div className="flex flex-col h-full w-full">
+       <div className="flex-1 overflow-hidden flex flex-col">
         <ScrollArea className="flex-1" ref={scrollAreaRef}>
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
             {messages.length === 0 && !isPending && (
@@ -247,7 +247,7 @@ export default function ChatPage() {
         </ScrollArea>
       </div>
 
-      <div className="w-full max-w-3xl p-4 border-t border-transparent">
+      <div className="w-full max-w-3xl p-4 border-t border-transparent mx-auto">
         {fileName && (
             <div className="mb-2">
                 <Alert>
@@ -328,7 +328,3 @@ export default function ChatPage() {
     </div>
   );
 }
-
-    
-
-    
