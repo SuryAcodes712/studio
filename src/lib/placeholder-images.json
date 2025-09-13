@@ -1,3 +1,52 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-background",
+      "description": "Lush green field under a clear blue sky",
+      "imageUrl": "https://picsum.photos/seed/101/1920/1080",
+      "imageHint": "green field"
+    },
+    {
+      "id": "crop-cycles",
+      "description": "Illustration of different crop growth stages",
+      "imageUrl": "https://picsum.photos/seed/102/600/400",
+      "imageHint": "crop growth"
+    },
+    {
+      "id": "soil-health",
+      "description": "Farmer holding rich, dark soil in their hands",
+      "imageUrl": "https://picsum.photos/seed/103/600/400",
+      "imageHint": "soil hands"
+    },
+    {
+      "id": "pesticide-guide",
+      "description": "A person safely spraying crops in a field",
+      "imageUrl": "https://picsum.photos/seed/104/600/400",
+      "imageHint": "spraying crops"
+    },
+    {
+      "id": "irrigation-techniques",
+      "description": "Video thumbnail showing a modern sprinkler system in a field",
+      "imageUrl": "https://picsum.photos/seed/105/600/400",
+      "imageHint": "irrigation system"
+    },
+    {
+      "id": "market-trends",
+      "description": "Thumbnail showing charts and graphs for market prices",
+      "imageUrl": "https://picsum.photos/seed/106/600/400",
+      "imageHint": "market charts"
+    },
+    {
+      "id": "user-avatar",
+      "description": "Avatar of a farmer",
+      "imageUrl": "https://picsum.photos/seed/107/40/40",
+      "imageHint": "farmer portrait"
+    },
+    {
+      "id": "history-plant",
+      "description": "A close up of a tomato plant leaf.",
+      "imageUrl": "https://picsum.photos/seed/108/100/100",
+      "imageHint": "plant leaf"
+    }
+  ]
 }
