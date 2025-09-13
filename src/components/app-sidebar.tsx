@@ -37,7 +37,7 @@ export function AppSidebar() {
       <SidebarHeader>
         <Link href="/dashboard" className="flex items-center gap-2 font-bold text-lg text-primary font-headline">
           <Leaf className="h-6 w-6" />
-          <span>Krishi Sahayak</span>
+          <span>Krishi Mitar</span>
         </Link>
       </SidebarHeader>
       <SidebarMenu>

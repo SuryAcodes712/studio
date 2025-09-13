@@ -21,7 +21,7 @@ export default function Home() {
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center text-center">
         <main className="container mx-auto flex flex-col items-center justify-center gap-6 px-4 py-16">
           <h1 className="text-5xl font-bold tracking-tight text-primary md:text-7xl lg:text-8xl font-headline">
-            Krishi Sahayak
+            Krishi Mitar
           </h1>
           <p className="max-w-2xl text-lg text-foreground/80 md:text-xl">
             Your AI-powered companion for modern farming. Get instant advice, diagnose crop issues, and access a wealth of agricultural knowledge.
