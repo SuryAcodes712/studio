@@ -3,6 +3,7 @@
 import { generateAgriculturalAdvice } from "@/ai/flows/generate-agricultural-advice";
 import { diagnosePlantHealthFromImage } from "@/ai/flows/diagnose-plant-health-from-image";
 import { textToSpeech } from "@/ai/flows/text-to-speech";
+import { analyzeSchemeDocument } from "@/ai/flows/analyze-scheme-document";
 
 export interface AdviceState {
   advice?: string;
@@ -60,5 +61,31 @@ export async function diagnosePlant(
     console.error(e);
     const errorMessage = e instanceof Error ? e.message : "An unknown error occurred.";
     return { error: `Failed to diagnose plant: ${errorMessage}` };
+  }
+}
+
+export interface SchemeAnalysisState {
+  answer?: string;
+  error?: string;
+}
+
+export async function getSchemeAnalysis(
+  prevState: SchemeAnalysisState,
+  formData: FormData,
+): Promise<SchemeAnalysisState> {
+  const query = formData.get('query') as string;
+  const documentContent = formData.get('documentContent') as string;
+
+  if (!query || !documentContent) {
+    return {error: 'Please upload a document and ask a question.'};
+  }
+
+  try {
+    const result = await analyzeSchemeDocument({query, documentContent});
+    return {answer: result.answer};
+  } catch (e) {
+    console.error(e);
+    const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
+    return {error: `Failed to analyze document: ${errorMessage}`};
   }
 }

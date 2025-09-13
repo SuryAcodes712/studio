@@ -7,6 +7,7 @@ const translations = {
             { id: 'advice', href: "/advice", label: "Get Advice" },
             { id: 'dashboard', href: "/dashboard", label: "Dashboard" },
             { id: 'diagnose', href: "/diagnose", label: "Diagnose" },
+            { id: 'schemes', href: "/schemes", label: "Schemes" },
             { id: 'library', href: "/library", label: "Library" },
             { id: 'history', href: "/history", label: "History" },
         ],
@@ -51,6 +52,17 @@ const translations = {
             },
             error: {
                 title: "Diagnosis Failed",
+            }
+        },
+        schemes: {
+            title: "Scheme Analyzer",
+            description: "Upload a scheme document and ask questions.",
+            placeholder: "e.g., 'What is the eligibility for the PM-KISAN scheme?'",
+            results: {
+                waiting: "Upload a document and ask a question to get started...",
+            },
+            error: {
+                title: "Failed to analyze document",
             }
         },
         advice: {
@@ -142,6 +154,7 @@ const translations = {
             { id: 'advice', href: "/advice", label: "सलाह लें" },
             { id: 'dashboard', href: "/dashboard", label: "tableau" },
             { id: 'diagnose', href: "/diagnose", label: "निदान" },
+            { id: 'schemes', href: "/schemes", label: "योजनाएं" },
             { id: 'library', href: "/library", label: "पुस्तकालय" },
             { id: 'history', href: "/history", label: "इतिहास" },
         ],
@@ -186,6 +199,17 @@ const translations = {
             },
             error: {
                 title: "निदान विफल",
+            }
+        },
+        schemes: {
+            title: "योजना विश्लेषक",
+            description: "एक योजना दस्तावेज़ अपलोड करें और प्रश्न पूछें।",
+            placeholder: "जैसे, 'पीएम-किसान योजना के लिए पात्रता क्या है?'",
+            results: {
+                waiting: "आरंभ करने के लिए एक दस्तावेज़ अपलोड करें और एक प्रश्न पूछें...",
+            },
+            error: {
+                title: "दस्तावेज़ का विश्लेषण करने में विफल",
             }
         },
         advice: {

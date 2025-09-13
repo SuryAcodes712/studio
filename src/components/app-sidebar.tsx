@@ -9,6 +9,7 @@ import {
   Leaf,
   Lightbulb,
   HeartPulse,
+  FileText,
 } from "lucide-react";
 import {
   Sidebar,
@@ -26,6 +27,7 @@ const navIcons = {
   advice: Lightbulb,
   dashboard: LayoutDashboard,
   diagnose: HeartPulse,
+  schemes: FileText,
   library: BookOpen,
   history: History,
 } as const;
