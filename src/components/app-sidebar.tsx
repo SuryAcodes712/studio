@@ -29,7 +29,6 @@ const navIcons = {
   advice: Lightbulb,
   dashboard: LayoutDashboard,
   diagnose: HeartPulse,
-  schemes: FileText,
   library: BookOpen,
   history: History,
 } as const;
@@ -53,7 +52,7 @@ export function AppSidebar() {
           const Icon = navIcons[item.id as keyof typeof navIcons] || LayoutDashboard;
           return (
             <SidebarMenuItem key={item.href}>
-              <Link href={item.href} passHref>
+              <Link href={item.href}>
                 <SidebarMenuButton
                   isActive={pathname === item.href}
                   className={cn(
@@ -62,8 +61,10 @@ export function AppSidebar() {
                       "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
                   )}
                 >
-                  <Icon className="mr-2 h-7 w-7" />
-                  <span>{item.label}</span>
+                  <>
+                    <Icon className="mr-2 h-7 w-7" />
+                    <span>{item.label}</span>
+                  </>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
