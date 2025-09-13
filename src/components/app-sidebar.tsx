@@ -19,12 +19,13 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import { siteConfig } from "@/lib/site-config";
+import { useLanguage } from "@/context/language-context";
+
 
 const navIcons = {
+  advice: Lightbulb,
   dashboard: LayoutDashboard,
   diagnose: HeartPulse,
-  advice: Lightbulb,
   library: BookOpen,
   history: History,
 } as const;
@@ -32,17 +33,19 @@ const navIcons = {
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { t } = useLanguage();
+  const navItems: any[] = t('nav', { returnObjects: true });
 
   return (
     <Sidebar>
       <SidebarHeader>
         <Link href="/dashboard" className="flex items-center gap-2 font-bold text-lg text-primary font-headline">
           <Leaf className="h-8 w-8" />
-          <span>{siteConfig.name}</span>
+          <span>{t('name')}</span>
         </Link>
       </SidebarHeader>
       <SidebarMenu>
-        {siteConfig.nav.map((item) => {
+        {navItems.map((item) => {
           const Icon = navIcons[item.id as keyof typeof navIcons] || LayoutDashboard;
           return (
             <SidebarMenuItem key={item.href}>

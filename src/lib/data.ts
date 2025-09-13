@@ -11,36 +11,36 @@ type LibraryItem = {
 export const libraryContent: LibraryItem[] = [
   {
     id: "1",
-    title: "Understanding Crop Cycles",
-    description: "A comprehensive guide to seasonal crop planning and rotation.",
+    title: "library.items.0.title",
+    description: "library.items.0.description",
     type: "article",
     image: PlaceHolderImages.find((img) => img.id === "crop-cycles"),
   },
   {
     id: "2",
-    title: "Mastering Soil Health",
-    description: "Learn how to test and improve your soil for better yields.",
+    title: "library.items.1.title",
+    description: "library.items.1.description",
     type: "guide",
     image: PlaceHolderImages.find((img) => img.id === "soil-health"),
   },
   {
     id: "3",
-    title: "Beginner's Guide to Pesticides",
-    description: "Safe and effective application of pesticides for common pests.",
+    title: "library.items.2.title",
+    description: "library.items.2.description",
     type: "guide",
     image: PlaceHolderImages.find((img) => img.id === "pesticide-guide"),
   },
   {
     id: "4",
-    title: "Modern Irrigation Techniques",
-    description: "Watch and learn about drip irrigation, sprinklers, and more.",
+    title: "library.items.3.title",
+    description: "library.items.3.description",
     type: "video",
     image: PlaceHolderImages.find((img) => img.id === "irrigation-techniques"),
   },
   {
     id: "5",
-    title: "Weekly Market Trends",
-    description: "An analysis of this week's crop prices and market demands.",
+    title: "library.items.4.title",
+    description: "library.items.4.description",
     type: "article",
     image: PlaceHolderImages.find((img) => img.id === "market-trends"),
   },
@@ -62,31 +62,28 @@ export const advisoryHistory: HistoryItem[] = [
     id: "hist1",
     query: {
       type: "image",
-      content: "Tomato Plant Diagnosis",
+      content: "history.items.0.query.content",
       image: PlaceHolderImages.find((img) => img.id === "history-plant"),
     },
-    response:
-      "The plant appears to be suffering from early blight, characterized by the concentric rings on the lower leaves. It's recommended to apply a copper-based fungicide and ensure proper air circulation.",
-    date: "2 days ago",
+    response: "history.items.0.response",
+    date: "history.items.0.date",
   },
   {
     id: "hist2",
     query: {
       type: "text",
-      content: "How to deal with aphids on my cabbage?",
+      content: "history.items.1.query.content",
     },
-    response:
-      "Aphids on cabbage can be controlled by introducing natural predators like ladybugs, or by spraying with insecticidal soap. Ensure you spray the undersides of the leaves where aphids tend to congregate.",
-    date: "1 week ago",
+    response: "history.items.1.response",
+    date: "history.items.1.date",
   },
   {
     id: "hist3",
     query: {
       type: "text",
-      content: "Best fertilizer for sandy soil?",
+      content: "history.items.2.query.content",
     },
-    response:
-      "For sandy soil, it's best to use a slow-release nitrogen fertilizer. Incorporating organic matter like compost will also help improve water and nutrient retention.",
-    date: "3 weeks ago",
+    response: "history.items.2.response",
+    date: "history.items.2.date",
   },
 ];

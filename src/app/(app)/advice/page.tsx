@@ -15,7 +15,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Mic, Send, Sparkles, Square, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { siteConfig } from "@/lib/site-config";
 import {
   Select,
   SelectContent,
@@ -24,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { useLanguage } from "@/context/language-context";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -35,6 +35,7 @@ const initialState: AdviceState = {};
 
 export default function AdvicePage() {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [language, setLanguage] = useState("en");
@@ -73,10 +74,10 @@ export default function AdvicePage() {
       if (state.error) {
         toast({
           variant: "destructive",
-          title: siteConfig.advice.error.title,
+          title: t('advice.error.title'),
           description: state.error,
         });
-        setMessages(newMessages); // Revert to previous state on error
+        setMessages(newMessages);
       }
       if (state.advice) {
         setMessages([...newMessages, { role: 'assistant', content: state.advice, audioDataUri: state.audioDataUri }]);
@@ -98,8 +99,8 @@ export default function AdvicePage() {
       if (!SpeechRecognition) {
         toast({
           variant: "destructive",
-          title: siteConfig.advice.error.voiceNotSupported.title,
-          description: siteConfig.advice.error.voiceNotSupported.description,
+          title: t('advice.error.voiceNotSupported.title'),
+          description: t('advice.error.voiceNotSupported.description'),
         });
         return;
       }
@@ -129,16 +130,16 @@ export default function AdvicePage() {
           <div className="flex items-center gap-4">
             <Sparkles className="h-10 w-10 text-primary" />
             <div>
-              <CardTitle>{siteConfig.advice.title}</CardTitle>
-              <CardDescription>{siteConfig.advice.description}</CardDescription>
+              <CardTitle>{t('advice.title')}</CardTitle>
+              <CardDescription>{t('advice.description')}</CardDescription>
             </div>
           </div>
           <Select name="language" value={language} onValueChange={setLanguage}>
               <SelectTrigger className="text-base w-48">
-                <SelectValue placeholder={siteConfig.advice.language.placeholder} />
+                <SelectValue placeholder={t('advice.language.placeholder')} />
               </SelectTrigger>
               <SelectContent>
-                {siteConfig.advice.language.options.map(lang => (
+                {t('advice.language.options', { returnObjects: true }).map((lang: { value: string; label: string }) => (
                   <SelectItem key={lang.value} value={lang.value}>{lang.label}</SelectItem>
                 ))}
               </SelectContent>
@@ -149,7 +150,7 @@ export default function AdvicePage() {
           <div className="space-y-6 pr-4">
             {messages.length === 0 && (
               <div className="flex h-full items-center justify-center rounded-lg border border-dashed">
-                <p className="text-muted-foreground">{siteConfig.advice.results.waiting}</p>
+                <p className="text-muted-foreground">{t('advice.results.waiting')}</p>
               </div>
             )}
             {messages.map((message, index) => (
@@ -165,7 +166,7 @@ export default function AdvicePage() {
                   <p className="whitespace-pre-wrap">{message.content}</p>
                    {message.audioDataUri && (
                     <audio controls src={message.audioDataUri} className="w-full mt-2 filter-primary">
-                      {siteConfig.advice.results.audioNotSupported}
+                      {t('advice.results.audioNotSupported')}
                     </audio>
                   )}
                 </div>
@@ -206,7 +207,7 @@ export default function AdvicePage() {
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={siteConfig.advice.placeholder}
+            placeholder={t('advice.placeholder')}
             className="flex-1 text-base"
             disabled={isPending}
           />
@@ -223,7 +224,7 @@ export default function AdvicePage() {
             ) : (
               <Mic className="h-6 w-6" />
             )}
-            <span className="sr-only">{isRecording ? siteConfig.advice.voice.stop : siteConfig.advice.voice.start}</span>
+            <span className="sr-only">{isRecording ? t('advice.voice.stop') : t('advice.voice.start')}</span>
           </Button>
           <Button type="submit" size="icon" disabled={isPending || !input.trim()}>
             <Send className="h-6 w-6" />

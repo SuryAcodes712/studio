@@ -14,11 +14,12 @@ import {
 } from "@/components/ui/card";
 import { UploadCloud, X, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { siteConfig } from "@/lib/site-config";
+import { useLanguage } from "@/context/language-context";
 
 const initialState: DiagnosisState = {};
 
 export default function DiagnosePage() {
+  const { t } = useLanguage();
   const [state, formAction] = useFormState(diagnosePlant, initialState);
   const { toast } = useToast();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -29,11 +30,11 @@ export default function DiagnosePage() {
     if (state.error) {
       toast({
         variant: "destructive",
-        title: siteConfig.diagnose.error.title,
+        title: t('diagnose.error.title'),
         description: state.error,
       });
     }
-  }, [state, toast]);
+  }, [state, toast, t]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -52,15 +53,16 @@ export default function DiagnosePage() {
       fileInputRef.current.value = "";
     }
     formRef.current?.reset();
+    
   };
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       <Card>
         <CardHeader>
-          <CardTitle>{siteConfig.diagnose.title}</CardTitle>
+          <CardTitle>{t('diagnose.title')}</CardTitle>
           <CardDescription>
-            {siteConfig.diagnose.description}
+            {t('diagnose.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -84,7 +86,7 @@ export default function DiagnosePage() {
                     className="mb-4 max-h-48 w-auto rounded-md object-contain"
                   />
                   <p className="text-sm text-muted-foreground">
-                    {siteConfig.diagnose.image.change}
+                    {t('diagnose.image.change')}
                   </p>
                   <button
                     type="button"
@@ -100,9 +102,9 @@ export default function DiagnosePage() {
               ) : (
                 <>
                   <UploadCloud className="mb-2 h-14 w-14 text-muted-foreground" />
-                  <p className="font-semibold">{siteConfig.diagnose.image.upload}</p>
+                  <p className="font-semibold">{t('diagnose.image.upload')}</p>
                   <p className="text-xs text-muted-foreground">
-                    {siteConfig.diagnose.image.formats}
+                    {t('diagnose.image.formats')}
                   </p>
                 </>
               )}
@@ -115,7 +117,7 @@ export default function DiagnosePage() {
               />
             </div>
             <SubmitButton className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6">
-              {siteConfig.cta.diagnose}
+              {t('cta.diagnose')}
             </SubmitButton>
           </form>
         </CardContent>
@@ -125,10 +127,10 @@ export default function DiagnosePage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Sparkles className="h-8 w-8 text-primary" />
-            {siteConfig.diagnose.results.title}
+            {t('diagnose.results.title')}
           </CardTitle>
           <CardDescription>
-            {siteConfig.diagnose.results.description}
+            {t('diagnose.results.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -142,7 +144,7 @@ export default function DiagnosePage() {
           ) : (
             <div className="flex h-48 items-center justify-center rounded-lg border border-dashed">
               <p className="text-muted-foreground">
-                {siteConfig.diagnose.results.waiting}
+                {t('diagnose.results.waiting')}
               </p>
             </div>
           )}

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   Card,
@@ -17,7 +19,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { advisoryHistory } from "@/lib/data";
-import { siteConfig } from "@/lib/site-config";
+import { useLanguage } from "@/context/language-context";
 
 const weatherData = {
   location: "Bhopal, MP",
@@ -32,12 +34,14 @@ const weatherData = {
 };
 
 export default function DashboardPage() {
+  const { t } = useLanguage();
+
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       <Card className="lg:col-span-1">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>{siteConfig.dashboard.weather.title}</span>
+            <span>{t('dashboard.weather.title')}</span>
             {weatherData.icon}
           </CardTitle>
           <CardDescription>{weatherData.location}</CardDescription>
@@ -59,8 +63,8 @@ export default function DashboardPage() {
 
       <Card className="lg:col-span-2">
         <CardHeader>
-          <CardTitle>{siteConfig.dashboard.quickActions.title}</CardTitle>
-          <CardDescription>{siteConfig.dashboard.quickActions.description}</CardDescription>
+          <CardTitle>{t('dashboard.quickActions.title')}</CardTitle>
+          <CardDescription>{t('dashboard.quickActions.description')}</CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Button
@@ -72,8 +76,8 @@ export default function DashboardPage() {
               <div className="flex items-center gap-4">
                 <ImageUp className="h-12 w-12 text-primary" />
                 <div>
-                  <p className="font-semibold">{siteConfig.dashboard.quickActions.diagnose.title}</p>
-                  <p className="text-sm text-muted-foreground">{siteConfig.dashboard.quickActions.diagnose.description}</p>
+                  <p className="font-semibold">{t('dashboard.quickActions.diagnose.title')}</p>
+                  <p className="text-sm text-muted-foreground">{t('dashboard.quickActions.diagnose.description')}</p>
                 </div>
               </div>
             </Link>
@@ -87,8 +91,8 @@ export default function DashboardPage() {
               <div className="flex items-center gap-4">
                 <BotMessageSquare className="h-12 w-12 text-primary" />
                 <div>
-                  <p className="font-semibold">{siteConfig.dashboard.quickActions.advice.title}</p>
-                  <p className="text-sm text-muted-foreground">{siteConfig.dashboard.quickActions.advice.description}</p>
+                  <p className="font-semibold">{t('dashboard.quickActions.advice.title')}</p>
+                  <p className="text-sm text-muted-foreground">{t('dashboard.quickActions.advice.description')}</p>
                 </div>
               </div>
             </Link>
@@ -100,10 +104,10 @@ export default function DashboardPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <History className="h-8 w-8" />
-            {siteConfig.dashboard.recentActivity.title}
+            {t('dashboard.recentActivity.title')}
           </CardTitle>
           <CardDescription>
-            {siteConfig.dashboard.recentActivity.description}
+            {t('dashboard.recentActivity.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -118,10 +122,10 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold truncate">
-                    {item.query.content}
+                    {t(item.query.content as any)}
                   </p>
                   <p className="text-sm text-muted-foreground truncate whitespace-normal">
-                    {item.response}
+                    {t(item.response as any)}
                   </p>
                 </div>
               </div>

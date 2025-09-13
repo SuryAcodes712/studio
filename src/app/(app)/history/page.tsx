@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import {
   Accordion,
@@ -7,15 +9,16 @@ import {
 } from "@/components/ui/accordion";
 import { advisoryHistory } from "@/lib/data";
 import { Clock, MessageSquare, Image as ImageIcon } from "lucide-react";
-import { siteConfig } from "@/lib/site-config";
+import { useLanguage } from "@/context/language-context";
 
 export default function HistoryPage() {
+  const { t } = useLanguage();
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold font-headline">{siteConfig.history.title}</h1>
+        <h1 className="text-3xl font-bold font-headline">{t('history.title')}</h1>
         <p className="text-muted-foreground">
-          {siteConfig.history.description}
+          {t('history.description')}
         </p>
       </div>
       <Accordion type="single" collapsible className="w-full">
@@ -32,12 +35,12 @@ export default function HistoryPage() {
                     )}
                   </div>
                   <span className="flex-1 font-medium">
-                    {item.query.content}
+                    {t(item.query.content as any)}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground ml-auto sm:ml-0 pl-16 sm:pl-0">
                   <Clock className="h-6 w-6" />
-                  <span>{item.date}</span>
+                  <span>{t(item.date as any)}</span>
                 </div>
               </div>
             </AccordionTrigger>
@@ -53,7 +56,7 @@ export default function HistoryPage() {
                     data-ai-hint={item.query.image.imageHint}
                   />
                 )}
-                <p className="flex-1 text-muted-foreground">{item.response}</p>
+                <p className="flex-1 text-muted-foreground">{t(item.response as any)}</p>
               </div>
             </AccordionContent>
           </AccordionItem>

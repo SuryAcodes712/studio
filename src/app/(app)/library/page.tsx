@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import {
   Card,
@@ -9,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { libraryContent } from "@/lib/data";
 import { BookText, Film, FileText } from "lucide-react";
-import { siteConfig } from "@/lib/site-config";
+import { useLanguage } from "@/context/language-context";
 
 const typeIcons = {
   article: <BookText className="h-6 w-6" />,
@@ -18,12 +20,14 @@ const typeIcons = {
 };
 
 export default function LibraryPage() {
+  const { t } = useLanguage();
+
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold font-headline">{siteConfig.library.title}</h1>
+        <h1 className="text-3xl font-bold font-headline">{t('library.title')}</h1>
         <p className="text-muted-foreground">
-          {siteConfig.library.description}
+          {t('library.description')}
         </p>
       </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -49,11 +53,11 @@ export default function LibraryPage() {
                 className="mb-2 flex w-fit items-center gap-1.5 py-1 px-3"
               >
                 {typeIcons[item.type]}
-                <span className="capitalize">{item.type}</span>
+                <span className="capitalize">{t(item.type as any)}</span>
               </Badge>
-              <CardTitle className="mb-2 text-lg font-semibold font-headline">{item.title}</CardTitle>
+              <CardTitle className="mb-2 text-lg font-semibold font-headline">{t(item.title as any)}</CardTitle>
               <CardDescription className="flex-1 text-sm">
-                {item.description}
+                {t(item.description as any)}
               </CardDescription>
             </CardContent>
           </Card>

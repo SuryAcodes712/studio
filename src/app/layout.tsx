@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster";
 import { Playfair_Display, PT_Sans } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { LanguageProvider } from "@/context/language-context";
 import "./globals.css";
 
 const fontSans = PT_Sans({
@@ -34,8 +35,10 @@ export default function RootLayout({
         fontSans.variable,
         fontSerif.variable
       )}>
-        {children}
-        <Toaster />
+        <LanguageProvider>
+          {children}
+          <Toaster />
+        </LanguageProvider>
       </body>
     </html>
   );
