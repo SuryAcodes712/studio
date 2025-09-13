@@ -50,8 +50,13 @@ export default function ChatPage() {
   const [fileType, setFileType] = useState<'image' | 'pdf' | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [isListening, setIsListening] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   const userAvatar = PlaceHolderImages.find((img) => img.id === "user-avatar");
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -376,7 +381,7 @@ export default function ChatPage() {
             className="flex-1 text-base bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
             disabled={isPending}
           />
-        {recognition && (
+        {isClient && recognition && (
           <Button
             type="button"
             variant={isListening ? "destructive" : "ghost"}
