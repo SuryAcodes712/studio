@@ -33,7 +33,8 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [isPending, startTransition] = useTransition();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const docInputRef = useRef<HTMLInputElement>(null);
 
   // State for uploaded file
   const [fileData, setFileData] = useState<string | null>(null);
@@ -94,8 +95,11 @@ export default function ChatPage() {
     setFileData(null);
     setFileType(null);
     setFileName(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+    if (imageInputRef.current) {
+      imageInputRef.current.value = "";
+    }
+    if (docInputRef.current) {
+      docInputRef.current.value = "";
     }
   };
 
@@ -282,23 +286,30 @@ export default function ChatPage() {
                     <span className="sr-only">Attach file</span>
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80 mb-2">
-                <div className="grid gap-4">
-                    <div className="space-y-2">
-                    <h4 className="font-medium leading-none">{t('chat.upload.title')}</h4>
-                    <p className="text-sm text-muted-foreground">{t('chat.upload.description')}</p>
-                    </div>
+             <PopoverContent className="w-48 p-2 mb-2 border-none shadow-xl">
+                <div className="grid grid-cols-2 gap-2">
                     <Button
                         variant="outline"
-                        onClick={() => fileInputRef.current?.click()}
+                        className="flex flex-col h-24 w-full items-center justify-center gap-2"
+                        onClick={() => imageInputRef.current?.click()}
                     >
-                       <FileText className="mr-2 h-4 w-4"/> Select File
+                       <ImageIcon className="h-8 w-8"/> 
+                       <span className="text-xs">Image</span>
+                    </Button>
+                     <Button
+                        variant="outline"
+                        className="flex flex-col h-24 w-full items-center justify-center gap-2"
+                        onClick={() => docInputRef.current?.click()}
+                    >
+                       <FileText className="h-8 w-8"/> 
+                       <span className="text-xs">Document</span>
                     </Button>
                 </div>
             </PopoverContent>
           </Popover>
 
-          <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*,application/pdf" />
+          <input type="file" ref={imageInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
+          <input type="file" ref={docInputRef} onChange={handleFileChange} className="hidden" accept="application/pdf" />
           
           <Input
             value={input}
