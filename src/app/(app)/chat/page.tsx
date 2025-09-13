@@ -163,134 +163,134 @@ export default function ChatPage() {
   };
 
   return (
-     <div className="flex flex-col h-full w-full">
-        <ScrollArea className="flex-1" ref={scrollAreaRef}>
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-            {messages.length === 0 && !isPending && (
-                <div className="flex flex-col items-center justify-center h-full text-center pt-24">
-                    <Avatar className="h-16 w-16 mb-4 bg-primary text-primary-foreground">
-                        <AvatarFallback><Sparkles className="h-8 w-8"/></AvatarFallback>
-                    </Avatar>
-                    <h1 className="text-2xl font-semibold text-foreground">{t('chat.title')}</h1>
-                </div>
-            )}
-            {messages.map((message, index) => (
-              <div key={index} className={`flex items-start gap-4 ${message.role === 'user' ? 'justify-end' : ''}`}>
-                {message.role === 'assistant' && (
-                  <Avatar className="h-10 w-10 border-2 border-primary">
-                    <AvatarFallback>
-                      <Sparkles />
-                    </AvatarFallback>
-                  </Avatar>
+    <div className="flex flex-col h-full w-full">
+      <ScrollArea className="flex-1" ref={scrollAreaRef}>
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+          {messages.length === 0 && !isPending && (
+            <div className="flex flex-col items-center justify-center h-full text-center pt-24">
+              <Avatar className="h-16 w-16 mb-4 bg-primary text-primary-foreground">
+                <AvatarFallback><Sparkles className="h-8 w-8"/></AvatarFallback>
+              </Avatar>
+              <h1 className="text-2xl font-semibold text-foreground">{t('chat.title')}</h1>
+            </div>
+          )}
+          {messages.map((message, index) => (
+            <div key={index} className={`flex items-start gap-4 ${message.role === 'user' ? 'justify-end' : ''}`}>
+              {message.role === 'assistant' && (
+                <Avatar className="h-10 w-10 border-2 border-primary">
+                  <AvatarFallback>
+                    <Sparkles />
+                  </AvatarFallback>
+                </Avatar>
+              )}
+              <div className={`rounded-lg p-4 ${message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+                {message.imagePreview && (
+                  <Image src={message.imagePreview} alt="User upload" width={200} height={200} className="rounded-md mb-2" />
                 )}
-                <div className={`rounded-lg p-4 ${message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
-                  {message.imagePreview && (
-                    <Image src={message.imagePreview} alt="User upload" width={200} height={200} className="rounded-md mb-2" />
-                  )}
-                  {message.fileName && (
-                    <div className="mb-2 p-2 rounded-md bg-background/50 flex items-center gap-2">
-                        <FileText className="h-5 w-5"/>
-                        <span className="text-sm font-medium">{message.fileName}</span>
-                    </div>
-                  )}
-                  <p className="whitespace-pre-wrap">{message.content}</p>
-                   {message.audioDataUri && (
-                    <audio controls src={message.audioDataUri} className="w-full mt-2 filter-primary">
-                      {t('advice.results.audioNotSupported')}
-                    </audio>
-                  )}
-                </div>
-                {message.role === 'user' && (
-                  <Avatar className="h-10 w-10">
-                     {userAvatar ? (
-                      <Image
-                        src={userAvatar.imageUrl}
-                        alt={userAvatar.description}
-                        data-ai-hint={userAvatar.imageHint}
-                        className="rounded-full"
-                        width={40}
-                        height={40}
-                      />
-                    ) : <AvatarFallback><User /></AvatarFallback>}
-                  </Avatar>
+                {message.fileName && (
+                  <div className="mb-2 p-2 rounded-md bg-background/50 flex items-center gap-2">
+                    <FileText className="h-5 w-5"/>
+                    <span className="text-sm font-medium">{message.fileName}</span>
+                  </div>
+                )}
+                <p className="whitespace-pre-wrap">{message.content}</p>
+                {message.audioDataUri && (
+                  <audio controls src={message.audioDataUri} className="w-full mt-2 filter-primary">
+                    {t('advice.results.audioNotSupported')}
+                  </audio>
                 )}
               </div>
-            ))}
-             {isPending && (
-                <div className="flex items-start gap-4">
-                  <Avatar className="h-10 w-10 border-2 border-primary">
-                    <AvatarFallback>
-                      <Sparkles />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="rounded-lg p-4 max-w-[80%] bg-muted">
-                    <div className="flex items-center gap-2">
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                      <p>Thinking...</p>
-                    </div>
-                  </div>
-                </div>
+              {message.role === 'user' && (
+                <Avatar className="h-10 w-10">
+                  {userAvatar ? (
+                    <Image
+                      src={userAvatar.imageUrl}
+                      alt={userAvatar.description}
+                      data-ai-hint={userAvatar.imageHint}
+                      className="rounded-full"
+                      width={40}
+                      height={40}
+                    />
+                  ) : <AvatarFallback><User /></AvatarFallback>}
+                </Avatar>
               )}
-          </div>
-        </ScrollArea>
-      <div className="w-full max-w-3xl p-4 mx-auto mb-4">
-        {fileName && (
-            <div className="mb-2">
-                <Alert>
-                    <div className="flex items-center gap-2">
-                     {fileType === 'image' && <ImageIcon className="h-4 w-4" />}
-                     {fileType === 'pdf' && <FileText className="h-4 w-4" />}
-                     <AlertTitle className="font-semibold">{fileName}</AlertTitle>
-                    </div>
-                    <AlertDescription className="flex justify-between items-center">
-                        File is ready to be sent.
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
-                            onClick={handleRemoveFile}
-                        >
-                            <span className="sr-only">Remove file</span>
-                            <X className="h-4 w-4" />
-                        </Button>
-                    </AlertDescription>
-                </Alert>
             </div>
+          ))}
+          {isPending && (
+            <div className="flex items-start gap-4">
+              <Avatar className="h-10 w-10 border-2 border-primary">
+                <AvatarFallback>
+                  <Sparkles />
+                </AvatarFallback>
+              </Avatar>
+              <div className="rounded-lg p-4 bg-muted">
+                <div className="flex items-center gap-2">
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <p>Thinking...</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </ScrollArea>
+      <div className="w-full max-w-3xl p-4 mx-auto mb-9">
+        {fileName && (
+          <div className="mb-2">
+            <Alert>
+              <div className="flex items-center gap-2">
+                {fileType === 'image' && <ImageIcon className="h-4 w-4" />}
+                {fileType === 'pdf' && <FileText className="h-4 w-4" />}
+                <AlertTitle className="font-semibold">{fileName}</AlertTitle>
+              </div>
+              <AlertDescription className="flex justify-between items-center">
+                File is ready to be sent.
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={handleRemoveFile}
+                >
+                  <span className="sr-only">Remove file</span>
+                  <X className="h-4 w-4" />
+                </Button>
+              </AlertDescription>
+            </Alert>
+          </div>
         )}
         <form onSubmit={handleSubmit} className="flex gap-2 items-center bg-muted/50 border rounded-full p-1 pl-3">
           <Popover>
             <PopoverTrigger asChild>
-                <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full flex-shrink-0"
-                    disabled={isPending}
-                >
-                    <Plus className="h-5 w-5" />
-                    <span className="sr-only">Attach file</span>
-                </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="rounded-full flex-shrink-0"
+                disabled={isPending}
+              >
+                <Plus className="h-5 w-5" />
+                <span className="sr-only">Attach file</span>
+              </Button>
             </PopoverTrigger>
-             <PopoverContent className="w-auto p-2 mb-2 border-none shadow-xl" align="start">
-                <div className="flex flex-col gap-2">
-                    <Button
-                        variant="outline"
-                        className="flex h-12 w-32 items-center justify-start gap-2 px-3"
-                        onClick={() => imageInputRef.current?.click()}
-                    >
-                       <ImageIcon className="h-5 w-5"/> 
-                       <span className="text-sm">Image</span>
-                    </Button>
-                     <Button
-                        variant="outline"
-                        className="flex h-12 w-32 items-center justify-start gap-2 px-3"
-                        onClick={() => docInputRef.current?.click()}
-                    >
-                       <FileText className="h-5 w-5"/> 
-                       <span className="text-sm">Document</span>
-                    </Button>
-                </div>
+            <PopoverContent className="w-auto p-2 mb-2 border-none shadow-xl" align="start">
+              <div className="flex flex-col gap-2">
+                <Button
+                  variant="outline"
+                  className="flex h-12 w-32 items-center justify-start gap-2 px-3"
+                  onClick={() => imageInputRef.current?.click()}
+                >
+                  <ImageIcon className="h-5 w-5"/> 
+                  <span className="text-sm">Image</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex h-12 w-32 items-center justify-start gap-2 px-3"
+                  onClick={() => docInputRef.current?.click()}
+                >
+                  <FileText className="h-5 w-5"/> 
+                  <span className="text-sm">Document</span>
+                </Button>
+              </div>
             </PopoverContent>
           </Popover>
 
@@ -314,5 +314,3 @@ export default function ChatPage() {
     </div>
   );
 }
-
-    
