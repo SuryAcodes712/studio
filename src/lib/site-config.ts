@@ -97,6 +97,7 @@ export const siteConfig = {
             settings: "Settings",
             support: "Support",
             logout: "Logout",
+            language: "Language",
         }
     }
 }
