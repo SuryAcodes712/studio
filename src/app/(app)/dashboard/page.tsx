@@ -37,30 +37,7 @@ export default function DashboardPage() {
   const { t } = useLanguage();
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <Card className="lg:col-span-1">
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span>{t('dashboard.weather.title')}</span>
-            {weatherData.icon}
-          </CardTitle>
-          <CardDescription>{weatherData.location}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <p className="text-4xl font-bold">{weatherData.temperature}</p>
-            <div className="flex gap-4">
-              {weatherData.forecast.map((f) => (
-                <div key={f.day} className="flex flex-col items-center gap-1">
-                  <span className="text-sm text-muted-foreground">{f.day}</span>
-                  {f.icon}
-                </div>
-              ))}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
+    <div className="grid gap-6 lg:grid-cols-2">
       <Card className="lg:col-span-2">
         <CardHeader>
           <CardTitle>{t('dashboard.quickActions.title')}</CardTitle>
@@ -87,11 +64,11 @@ export default function DashboardPage() {
             variant="outline"
             className="h-28 justify-start p-4 text-left"
           >
-            <Link href="/advice">
+            <Link href="/chat">
               <div className="flex items-center gap-4">
                 <BotMessageSquare className="h-12 w-12 text-primary" />
                 <div>
-                  <p className="font-semibold">{t('dashboard.quickActions.advice.title')}</p>
+                  <p className="font-semibold">Chat with AI</p>
                   <p className="text-sm text-muted-foreground">{t('dashboard.quickActions.advice.description')}</p>
                 </div>
               </div>
@@ -100,7 +77,30 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
 
-      <Card className="md:col-span-2 lg:col-span-3">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span>{t('dashboard.weather.title')}</span>
+            {weatherData.icon}
+          </CardTitle>
+          <CardDescription>{weatherData.location}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <p className="text-4xl font-bold">{weatherData.temperature}</p>
+            <div className="flex gap-4">
+              {weatherData.forecast.map((f) => (
+                <div key={f.day} className="flex flex-col items-center gap-1">
+                  <span className="text-sm text-muted-foreground">{f.day}</span>
+                  {f.icon}
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="lg:col-span-2">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <History className="h-8 w-8" />
@@ -112,7 +112,7 @@ export default function DashboardPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {advisoryHistory.slice(0, 2).map((item) => (
+            {advisoryHistory.slice(0, 3).map((item) => (
               <div
                 key={item.id}
                 className="flex flex-col sm:flex-row items-start gap-4 rounded-lg border p-4"
