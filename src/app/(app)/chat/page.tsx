@@ -272,7 +272,7 @@ export default function ChatPage() {
                 </Alert>
             </div>
         )}
-        <form onSubmit={handleSubmit} className="flex gap-2 items-center bg-background border rounded-full p-2">
+        <form onSubmit={handleSubmit} className="flex gap-2 items-center bg-background border rounded-full p-1 pl-3">
           <Popover>
             <PopoverTrigger asChild>
                 <Button
@@ -282,7 +282,7 @@ export default function ChatPage() {
                     className="rounded-full flex-shrink-0"
                     disabled={isPending}
                 >
-                    <Plus className="h-6 w-6" />
+                    <Plus className="h-5 w-5" />
                     <span className="sr-only">Attach file</span>
                 </Button>
             </PopoverTrigger>
@@ -320,7 +320,7 @@ export default function ChatPage() {
           />
 
           <Button type="submit" size="icon" className="rounded-full flex-shrink-0" disabled={isPending || (!input.trim() && !fileData)}>
-            <Send className="h-6 w-6" />
+            <Send className="h-5 w-5" />
             <span className="sr-only">Send</span>
           </Button>
         </form>
