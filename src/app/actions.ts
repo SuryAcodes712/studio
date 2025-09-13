@@ -16,13 +16,14 @@ export async function getAdvice(
 ): Promise<AdviceState> {
   const query = formData.get("query") as string;
   const language = formData.get("language") as string;
+  const photoDataUri = formData.get("photoDataUri") as string | undefined;
 
-  if (!query) {
-    return { error: "Please enter a query." };
+  if (!query && !photoDataUri) {
+    return { error: "Please enter a query or upload an image." };
   }
 
   try {
-    const result = await generateAgriculturalAdvice({ query, language });
+    const result = await generateAgriculturalAdvice({ query, language, photoDataUri });
     
     if (language !== 'en') {
       const ttsResult = await textToSpeech({ text: result.advice });

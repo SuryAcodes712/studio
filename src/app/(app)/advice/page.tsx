@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
+import Image from "next/image";
 import { getAdvice, type AdviceState } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Mic, Send, Sparkles, Square, User } from "lucide-react";
+import { Mic, Send, Sparkles, Square, User, Paperclip, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Select,
@@ -28,6 +29,7 @@ import { useLanguage } from "@/context/language-context";
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+  imagePreview?: string | null;
   audioDataUri?: string;
 }
 
@@ -39,10 +41,12 @@ export default function AdvicePage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [language, setLanguage] = useState("en");
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [isRecording, setIsRecording] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const userAvatar = PlaceHolderImages.find((img) => img.id === "user-avatar");
 
@@ -58,15 +62,19 @@ export default function AdvicePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() && !imagePreview) return;
 
-    const newMessages: Message[] = [...messages, { role: 'user', content: input }];
+    const newMessages: Message[] = [...messages, { role: 'user', content: input, imagePreview }];
     setMessages(newMessages);
     setInput("");
+    setImagePreview(null);
 
     const formData = new FormData();
     formData.append('query', input);
     formData.append('language', language);
+    if (imagePreview) {
+      formData.append('photoDataUri', imagePreview);
+    }
     
     startTransition(async () => {
       const state = await getAdvice(initialState, formData);
@@ -123,6 +131,24 @@ export default function AdvicePage() {
       setIsRecording(true);
     }
   };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
   
   return (
     <Card className="flex flex-col h-[calc(100vh-8rem)]">
@@ -163,6 +189,9 @@ export default function AdvicePage() {
                   </Avatar>
                 )}
                 <div className={`rounded-lg p-4 max-w-[80%] ${message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+                  {message.imagePreview && (
+                    <Image src={message.imagePreview} alt="User upload" width={200} height={200} className="rounded-md mb-2" />
+                  )}
                   <p className="whitespace-pre-wrap">{message.content}</p>
                    {message.audioDataUri && (
                     <audio controls src={message.audioDataUri} className="w-full mt-2 filter-primary">
@@ -203,7 +232,32 @@ export default function AdvicePage() {
         </ScrollArea>
       </CardContent>
       <div className="p-4 border-t">
+        {imagePreview && (
+          <div className="relative mb-2 w-24 h-24">
+            <Image src={imagePreview} alt="Image preview" layout="fill" className="rounded-md object-cover" />
+            <Button
+              type="button"
+              variant="destructive"
+              size="icon"
+              className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
+              onClick={handleRemoveImage}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="flex gap-2">
+          <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isPending}
+          >
+            <Paperclip className="h-6 w-6" />
+            <span className="sr-only">Attach image</span>
+          </Button>
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -226,7 +280,7 @@ export default function AdvicePage() {
             )}
             <span className="sr-only">{isRecording ? t('advice.voice.stop') : t('advice.voice.start')}</span>
           </Button>
-          <Button type="submit" size="icon" disabled={isPending || !input.trim()}>
+          <Button type="submit" size="icon" disabled={isPending || (!input.trim() && !imagePreview)}>
             <Send className="h-6 w-6" />
             <span className="sr-only">Send</span>
           </Button>
