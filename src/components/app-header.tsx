@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { User } from "lucide-react";
+import { User, Leaf } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
 
 type AppHeaderProps = {
@@ -38,7 +40,8 @@ export function AppHeader({ title }: AppHeaderProps) {
   const { t, language, setLanguage, availableLanguages } = useLanguage();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const userAvatar = PlaceHolderImages.find((img) => img.id === "user-avatar");
-  
+  const pathname = usePathname();
+
   const handleLanguageChange = (langCode: string) => {
     setLanguage(langCode);
     setIsSettingsOpen(false); // Close dialog on change
@@ -50,7 +53,16 @@ export function AppHeader({ title }: AppHeaderProps) {
         <div className="md:hidden">
           <SidebarTrigger />
         </div>
-        <h1 className="text-xl font-semibold md:text-2xl font-headline">{title}</h1>
+        
+        {pathname === '/chat' ? (
+           <Link href="/dashboard" className="flex items-center gap-2 font-bold text-lg text-primary font-headline">
+              <Leaf className="h-8 w-8" />
+              <span>{t('name')}</span>
+            </Link>
+        ) : (
+          <h1 className="text-xl font-semibold md:text-2xl font-headline">{title}</h1>
+        )}
+
         <div className="ml-auto flex items-center gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
