@@ -2,10 +2,12 @@
 
 import { generateAgriculturalAdvice } from "@/ai/flows/generate-agricultural-advice";
 import { diagnosePlantHealthFromImage } from "@/ai/flows/diagnose-plant-health-from-image";
+import { textToSpeech } from "@/ai/flows/text-to-speech";
 
 export interface AdviceState {
   advice?: string;
   error?: string;
+  audioDataUri?: string;
 }
 
 export async function getAdvice(
@@ -13,13 +15,20 @@ export async function getAdvice(
   formData: FormData
 ): Promise<AdviceState> {
   const query = formData.get("query") as string;
+  const language = formData.get("language") as string;
 
   if (!query) {
     return { error: "Please enter a query." };
   }
 
   try {
-    const result = await generateAgriculturalAdvice({ query });
+    const result = await generateAgriculturalAdvice({ query, language });
+    
+    if (language !== 'en') {
+      const ttsResult = await textToSpeech({ text: result.advice });
+      return { advice: result.advice, audioDataUri: ttsResult.audioDataUri };
+    }
+    
     return { advice: result.advice };
   } catch (e) {
     console.error(e);

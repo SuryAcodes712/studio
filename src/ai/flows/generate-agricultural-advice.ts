@@ -14,6 +14,7 @@ import {z} from 'genkit';
 
 const GenerateAgriculturalAdviceInputSchema = z.object({
   query: z.string().describe('The agricultural question or problem from the farmer.'),
+  language: z.string().optional().describe('The language for the response (e.g., "Hindi", "English").'),
 });
 export type GenerateAgriculturalAdviceInput = z.infer<typeof GenerateAgriculturalAdviceInputSchema>;
 
@@ -30,7 +31,11 @@ const prompt = ai.definePrompt({
   name: 'generateAgriculturalAdvicePrompt',
   input: {schema: GenerateAgriculturalAdviceInputSchema},
   output: {schema: GenerateAgriculturalAdviceOutputSchema},
-  prompt: `You are an expert agricultural advisor. A farmer has asked the following question: {{{query}}}. Provide helpful, context-aware advice to the farmer to help them make informed decisions about their crops.`,
+  prompt: `You are an expert agricultural advisor. A farmer has asked the following question: {{{query}}}. Provide helpful, context-aware advice to the farmer to help them make informed decisions about their crops.
+  {{#if language}}
+  Please provide the answer in the following language: {{{language}}}.
+  {{/if}}
+  `,
 });
 
 const generateAgriculturalAdviceFlow = ai.defineFlow(
