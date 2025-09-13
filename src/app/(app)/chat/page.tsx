@@ -233,7 +233,7 @@ export default function ChatPage() {
               )}
           </div>
         </ScrollArea>
-      <div className="w-full max-w-3xl p-4 border-t border-transparent mx-auto">
+      <div className="w-full max-w-3xl p-4 mx-auto mb-2">
         {fileName && (
             <div className="mb-2">
                 <Alert>
