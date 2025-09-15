@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useRef, useState, useEffect, useActionState } from "react";
@@ -161,7 +162,14 @@ export default function SchemesPage() {
                   </Avatar>
                 )}
                 <div className={`rounded-lg p-4 max-w-[80%] ${message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
-                  <p className="whitespace-pre-wrap">{message.content}</p>
+                   {message.role === 'user' ? (
+                    <p className="whitespace-pre-wrap">{message.content}</p>
+                   ) : (
+                    <div
+                        className="prose prose-sm max-w-none text-foreground dark:prose-invert"
+                        dangerouslySetInnerHTML={{ __html: message.content }}
+                    />
+                   )}
                 </div>
                 {message.role === 'user' && (
                   <Avatar className="h-10 w-10">

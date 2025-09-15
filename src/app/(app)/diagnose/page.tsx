@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef, useActionState } from "react";
@@ -145,7 +146,7 @@ export default function DiagnosePage() {
           )}
           {state.diagnosis && !isPending ? (
             <div
-              className="prose prose-sm max-w-none text-foreground"
+              className="prose prose-sm max-w-none text-foreground dark:prose-invert"
               dangerouslySetInnerHTML={{
                 __html: state.diagnosis,
               }}
@@ -162,3 +163,4 @@ export default function DiagnosePage() {
     </div>
   );
 }
+
