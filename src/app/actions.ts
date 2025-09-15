@@ -4,6 +4,7 @@ import { generateAgriculturalAdvice } from "@/ai/flows/generate-agricultural-adv
 import { diagnosePlantHealthFromImage } from "@/ai/flows/diagnose-plant-health-from-image";
 import { textToSpeech } from "@/ai/flows/text-to-speech";
 import { analyzeSchemeDocument } from "@/ai/flows/analyze-scheme-document";
+import { generateDashboardData } from "@/ai/flows/generate-dashboard-data";
 
 export interface AdviceState {
   advice?: string;
@@ -136,5 +137,23 @@ export async function getChatResponse(
     console.error(e);
     const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
     return {error: `Failed to get response: ${errorMessage}`};
+  }
+}
+
+export type DashboardState = {
+  data?: any;
+  error?: string;
+}
+
+export async function getDashboardData(
+  prevState: DashboardState
+): Promise<DashboardState> {
+  try {
+    const result = await generateDashboardData();
+    return { data: result };
+  } catch (e) {
+    console.error(e);
+    const errorMessage = e instanceof Error ? e.message : "An unknown error occurred.";
+    return { error: `Failed to load dashboard data: ${errorMessage}` };
   }
 }
