@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { UploadCloud, X, Sparkles } from "lucide-react";
+import { UploadCloud, X, Sparkles, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/context/language-context";
 
@@ -19,11 +19,10 @@ const initialState: DiagnosisState = {};
 
 export default function DiagnosePage() {
   const { t } = useLanguage();
-  const [state, formAction] = useActionState(diagnosePlant, initialState);
+  const [state, formAction, isPending] = useActionState(diagnosePlant, initialState);
   const { toast } = useToast();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (state.error) {
@@ -33,7 +32,14 @@ export default function DiagnosePage() {
         description: state.error,
       });
     }
-  }, [state.error, toast, t]);
+    if (state.diagnosis) {
+      // Clear image on successful diagnosis
+      setImagePreview(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  }, [state, toast, t]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -51,12 +57,10 @@ export default function DiagnosePage() {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-    formRef.current?.reset();
-    
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
       <Card>
         <CardHeader>
           <CardTitle>{t('diagnose.title')}</CardTitle>
@@ -65,7 +69,7 @@ export default function DiagnosePage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form ref={formRef} action={formAction} className="space-y-4">
+          <form action={formAction} className="space-y-4">
             <input
               type="hidden"
               name="photoDataUri"
@@ -116,7 +120,7 @@ export default function DiagnosePage() {
                 onChange={handleFileChange}
               />
             </div>
-            <SubmitButton className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6" disabled={!imagePreview}>
+            <SubmitButton className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6" disabled={!imagePreview || isPending}>
               {t('cta.diagnose')}
             </SubmitButton>
           </form>
@@ -134,12 +138,12 @@ export default function DiagnosePage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {state.pending && (
+          {isPending && (
              <div className="flex h-48 items-center justify-center rounded-lg border border-dashed">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
              </div>
           )}
-          {state.diagnosis && !state.pending ? (
+          {state.diagnosis && !isPending ? (
             <div
               className="prose prose-sm max-w-none text-foreground"
               dangerouslySetInnerHTML={{
@@ -147,7 +151,7 @@ export default function DiagnosePage() {
               }}
             />
           ) : (
-             !state.pending && <div className="flex h-48 items-center justify-center rounded-lg border border-dashed">
+             !isPending && <div className="flex h-48 items-center justify-center rounded-lg border border-dashed">
               <p className="text-muted-foreground">
                 {t('diagnose.results.waiting')}
               </p>
@@ -158,5 +162,3 @@ export default function DiagnosePage() {
     </div>
   );
 }
-
-    

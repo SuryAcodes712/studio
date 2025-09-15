@@ -69,7 +69,6 @@ export async function diagnosePlant(
 export interface SchemeAnalysisState {
   answer?: string;
   error?: string;
-  pending?: boolean;
 }
 
 export async function getSchemeAnalysis(
@@ -98,7 +97,6 @@ export interface ChatState {
   response?: string;
   error?: string;
   audioDataUri?: string;
-  pending?: boolean;
 }
 
 export async function getChatResponse(
@@ -159,5 +157,3 @@ export async function getDashboardData(
     return { error: `Failed to load dashboard data: ${errorMessage}` };
   }
 }
-
-    

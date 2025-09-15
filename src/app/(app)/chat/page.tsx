@@ -38,7 +38,7 @@ if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSp
 export default function ChatPage() {
   const { toast } = useToast();
   const { t, language } = useLanguage();
-  const [state, formAction] = useActionState(getChatResponse, initialChatState);
+  const [state, formAction, isPending] = useActionState(getChatResponse, initialChatState);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -78,7 +78,7 @@ export default function ChatPage() {
         }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.response, state.error, state.audioDataUri, toast, t]);
+  }, [state]);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -204,8 +204,7 @@ export default function ChatPage() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (formData: FormData) => {
     if (!input.trim() && !fileData) return;
 
     if(isListening) {
@@ -223,7 +222,6 @@ export default function ChatPage() {
 
     setMessages([...messages, userMessage]);
     
-    const formData = new FormData(formRef.current!);
     formAction(formData);
 
     setInput("");
@@ -234,7 +232,7 @@ export default function ChatPage() {
     <div className="flex flex-col h-full w-full">
       <ScrollArea className="flex-1" ref={scrollAreaRef}>
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-          {messages.length === 0 && !state.pending && (
+          {messages.length === 0 && !isPending && (
             <div className="flex flex-col items-center justify-center h-full text-center pt-24">
               <Avatar className="h-16 w-16 mb-4 bg-primary text-primary-foreground">
                 <AvatarFallback><Sparkles className="h-8 w-8"/></AvatarFallback>
@@ -251,7 +249,7 @@ export default function ChatPage() {
                   </AvatarFallback>
                 </Avatar>
               )}
-              <div className={`rounded-lg p-4 ${message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+              <div className={`rounded-lg p-4 max-w-[80%] ${message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
                 {message.imagePreview && (
                   <Image src={message.imagePreview} alt="User upload" width={200} height={200} className="rounded-md mb-2" />
                 )}
@@ -284,7 +282,7 @@ export default function ChatPage() {
               )}
             </div>
           ))}
-          {state.pending && (
+          {isPending && (
             <div className="flex items-start gap-4">
               <Avatar className="h-10 w-10 border-2 border-primary">
                 <AvatarFallback>
@@ -326,7 +324,7 @@ export default function ChatPage() {
             </Alert>
           </div>
         )}
-        <form ref={formRef} onSubmit={handleSubmit} className="flex gap-2 items-center bg-muted/50 border rounded-full p-1 pl-3">
+        <form ref={formRef} action={handleSubmit} className="flex gap-2 items-center bg-muted/50 border rounded-full p-1 pl-3">
           <input name="language" type="hidden" value={language} />
           <input name="photoDataUri" type="hidden" value={fileType === 'image' ? fileData ?? "" : ""} />
           <input name="documentContent" type="hidden" value={fileType === 'pdf' ? fileData ?? "" : ""} />
@@ -337,8 +335,8 @@ export default function ChatPage() {
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="rounded-full flex-shrink-0"
-                disabled={state.pending}
+                className="rounded-full flex-shrink-0 h-10 w-10 md:h-12 md:w-12"
+                disabled={isPending}
               >
                 <Plus className="h-5 w-5" />
                 <span className="sr-only">Attach file</span>
@@ -375,7 +373,7 @@ export default function ChatPage() {
             onChange={(e) => setInput(e.target.value)}
             placeholder={isListening ? "Listening..." : t('chat.placeholder')}
             className="flex-1 text-base bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
-            disabled={state.pending}
+            disabled={isPending}
           />
         {isClient && recognition && (
           <Button
@@ -384,7 +382,7 @@ export default function ChatPage() {
             size="icon"
             className="rounded-full flex-shrink-0"
             onClick={handleVoiceRecording}
-            disabled={state.pending}
+            disabled={isPending}
           >
             {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
             <span className="sr-only">{isListening ? "Stop listening" : "Start listening"}</span>
@@ -400,5 +398,3 @@ export default function ChatPage() {
     </div>
   );
 }
-
-    

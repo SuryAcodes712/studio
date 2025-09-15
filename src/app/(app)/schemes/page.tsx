@@ -30,7 +30,7 @@ const initialState: SchemeAnalysisState = {};
 export default function SchemesPage() {
   const { toast } = useToast();
   const { t } = useLanguage();
-  const [state, formAction] = useActionState(getSchemeAnalysis, initialState);
+  const [state, formAction, isPending] = useActionState(getSchemeAnalysis, initialState);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [documentContent, setDocumentContent] = useState<string | null>(null);
@@ -56,7 +56,7 @@ export default function SchemesPage() {
       setMessages(messages => [...messages, { role: 'assistant', content: state.answer! }]);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.answer, state.error, toast, t]);
+  }, [state]);
 
 
   useEffect(() => {
@@ -71,9 +71,9 @@ export default function SchemesPage() {
     }
   }, [messages]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || !documentContent) {
+  const handleSubmit = (formData: FormData) => {
+    const query = formData.get('query') as string;
+    if (!query || !documentContent) {
         toast({
             variant: "destructive",
             title: t('schemes.error.title'),
@@ -82,9 +82,8 @@ export default function SchemesPage() {
         return;
     }
 
-    setMessages([...messages, { role: 'user', content: input }]);
+    setMessages([...messages, { role: 'user', content: query }]);
 
-    const formData = new FormData(formRef.current!);
     formAction(formData);
 
     setInput("");
@@ -125,6 +124,7 @@ export default function SchemesPage() {
   const handleRemoveDocument = () => {
     setDocumentContent(null);
     setDocumentName(null);
+    setMessages([]);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -132,7 +132,7 @@ export default function SchemesPage() {
   
   return (
     <Card className="flex flex-col h-[calc(100vh-8rem)]">
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
           <div className="flex items-center gap-4">
             <FileText className="h-10 w-10 text-primary" />
             <div>
@@ -144,10 +144,10 @@ export default function SchemesPage() {
       <CardContent className="flex-1 overflow-hidden">
         <ScrollArea className="h-full" ref={scrollAreaRef}>
           <div className="space-y-6 pr-4">
-            {messages.length === 0 && (
+            {messages.length === 0 && !isPending && (
               <div className="flex h-full items-center justify-center rounded-lg border border-dashed py-24">
                 <div className="text-center">
-                  <p className="text-muted-foreground">{t('schemes.results.waiting')}</p>
+                   <p className="text-muted-foreground">{t('schemes.results.waiting')}</p>
                 </div>
               </div>
             )}
@@ -177,7 +177,7 @@ export default function SchemesPage() {
                 )}
               </div>
             ))}
-             {state.pending && (
+             {isPending && (
                 <div className="flex items-start gap-4">
                   <Avatar className="h-10 w-10 border-2 border-primary">
                     <AvatarFallback>
@@ -216,7 +216,7 @@ export default function SchemesPage() {
             </Alert>
           </div>
         )}
-        <form ref={formRef} onSubmit={handleSubmit} className="flex gap-2">
+        <form ref={formRef} action={handleSubmit} className="flex gap-2">
           <input
             name="documentContent"
             type="hidden"
@@ -228,7 +228,7 @@ export default function SchemesPage() {
             variant="outline"
             size="icon"
             onClick={() => fileInputRef.current?.click()}
-            disabled={state.pending || !!documentName}
+            disabled={isPending || !!documentName}
           >
             <Paperclip className="h-6 w-6" />
             <span className="sr-only">Attach PDF</span>
@@ -239,9 +239,9 @@ export default function SchemesPage() {
             onChange={(e) => setInput(e.target.value)}
             placeholder={t('schemes.placeholder')}
             className="flex-1 text-base"
-            disabled={state.pending || !documentName}
+            disabled={isPending || !documentName}
           />
-          <SubmitButton size="icon" disabled={!input.trim() || !documentContent}>
+          <SubmitButton size="icon" disabled={!input.trim() || !documentContent || isPending}>
             <Send className="h-6 w-6" />
             <span className="sr-only">Send</span>
           </SubmitButton>
@@ -250,5 +250,3 @@ export default function SchemesPage() {
     </Card>
   );
 }
-
-    
