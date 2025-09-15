@@ -21,7 +21,7 @@ const DiagnosePlantHealthFromImageInputSchema = z.object({
 export type DiagnosePlantHealthFromImageInput = z.infer<typeof DiagnosePlantHealthFromImageInputSchema>;
 
 const DiagnosePlantHealthFromImageOutputSchema = z.object({
-  diagnosis: z.string().describe('The diagnosis of the plant health from the image.'),
+  diagnosis: z.string().describe('The diagnosis of the plant health from the image, formatted as simple HTML.'),
 });
 export type DiagnosePlantHealthFromImageOutput = z.infer<typeof DiagnosePlantHealthFromImageOutputSchema>;
 
@@ -39,7 +39,9 @@ const prompt = ai.definePrompt({
 
 You will use the image to diagnose the plant, and any issues it has.
 
-Analyze the following image to determine if the plant is healthy or not, and describe any potential diseases, pests, or nutrient deficiencies. Explain your reasoning. Use markdown formatting.
+Analyze the following image to determine if the plant is healthy or not, and describe any potential diseases, pests, or nutrient deficiencies. Explain your reasoning. 
+
+Your response MUST be formatted as a simple HTML block. Use tags like <h3> for titles, <p> for paragraphs, and <ul><li> for lists. Do not include any CSS or class attributes.
 
 Photo: {{media url=photoDataUri}}`,
 });

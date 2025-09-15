@@ -25,7 +25,7 @@ const GenerateAgriculturalAdviceInputSchema = z.object({
 export type GenerateAgriculturalAdviceInput = z.infer<typeof GenerateAgriculturalAdviceInputSchema>;
 
 const GenerateAgriculturalAdviceOutputSchema = z.object({
-  advice: z.string().describe('The AI-generated agricultural advice.'),
+  advice: z.string().describe('The AI-generated agricultural advice, formatted as simple HTML.'),
 });
 export type GenerateAgriculturalAdviceOutput = z.infer<typeof GenerateAgriculturalAdviceOutputSchema>;
 
@@ -38,6 +38,9 @@ const prompt = ai.definePrompt({
   input: {schema: GenerateAgriculturalAdviceInputSchema},
   output: {schema: GenerateAgriculturalAdviceOutputSchema},
   prompt: `You are an expert agricultural advisor for Indian farmers. A farmer has asked the following question: {{{query}}}. Provide helpful, context-aware advice to the farmer to help them make informed decisions about their crops.
+  
+  Your response MUST be formatted as a simple HTML block. Use tags like <h3> for titles, <p> for paragraphs, and <ul><li> for lists. Do not include any CSS or class attributes.
+
   {{#if photoDataUri}}
   Analyze the following image as part of your assessment:
   Photo: {{media url=photoDataUri}}

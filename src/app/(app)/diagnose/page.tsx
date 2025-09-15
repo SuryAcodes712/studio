@@ -147,7 +147,7 @@ export default function DiagnosePage() {
             <div
               className="prose prose-sm max-w-none text-foreground"
               dangerouslySetInnerHTML={{
-                __html: state.diagnosis.replace(/\n/g, "<br />"),
+                __html: state.diagnosis,
               }}
             />
           ) : (

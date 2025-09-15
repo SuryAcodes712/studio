@@ -259,7 +259,14 @@ export default function ChatPage() {
                     <span className="text-sm font-medium">{message.fileName}</span>
                   </div>
                 )}
-                <p className="whitespace-pre-wrap">{message.content}</p>
+                {message.role === 'user' ? (
+                  <p className="whitespace-pre-wrap">{message.content}</p>
+                ) : (
+                  <div
+                    className="prose prose-sm max-w-none text-foreground"
+                    dangerouslySetInnerHTML={{ __html: message.content }}
+                  />
+                )}
                 {message.audioDataUri && (
                   <audio controls src={message.audioDataUri} className="w-full mt-2 filter-primary">
                     {t('advice.results.audioNotSupported')}
