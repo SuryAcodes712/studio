@@ -43,6 +43,7 @@ export async function getAdvice(
 export interface DiagnosisState {
   diagnosis?: string;
   error?: string;
+  pending?: boolean;
 }
 
 export async function diagnosePlant(
@@ -68,6 +69,7 @@ export async function diagnosePlant(
 export interface SchemeAnalysisState {
   answer?: string;
   error?: string;
+  pending?: boolean;
 }
 
 export async function getSchemeAnalysis(
@@ -96,6 +98,7 @@ export interface ChatState {
   response?: string;
   error?: string;
   audioDataUri?: string;
+  pending?: boolean;
 }
 
 export async function getChatResponse(
@@ -114,7 +117,6 @@ export async function getChatResponse(
       if (!query) {
         return { error: 'Please ask a question about the document.' };
       }
-      // Assuming analyzeSchemeDocument can be modified to accept a language preference
       const result = await analyzeSchemeDocument({ query, documentContent });
       responseText = result.answer;
     } else {
@@ -157,3 +159,5 @@ export async function getDashboardData(
     return { error: `Failed to load dashboard data: ${errorMessage}` };
   }
 }
+
+    

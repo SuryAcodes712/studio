@@ -33,7 +33,7 @@ export default function DiagnosePage() {
         description: state.error,
       });
     }
-  }, [state, toast, t]);
+  }, [state.error, toast, t]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -109,13 +109,14 @@ export default function DiagnosePage() {
               )}
               <input
                 ref={fileInputRef}
+                name="imageFile"
                 type="file"
                 className="hidden"
                 accept="image/*"
                 onChange={handleFileChange}
               />
             </div>
-            <SubmitButton className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6">
+            <SubmitButton className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6" disabled={!imagePreview}>
               {t('cta.diagnose')}
             </SubmitButton>
           </form>
@@ -133,7 +134,12 @@ export default function DiagnosePage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {state.diagnosis ? (
+          {state.pending && (
+             <div className="flex h-48 items-center justify-center rounded-lg border border-dashed">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+             </div>
+          )}
+          {state.diagnosis && !state.pending ? (
             <div
               className="prose prose-sm max-w-none text-foreground"
               dangerouslySetInnerHTML={{
@@ -141,7 +147,7 @@ export default function DiagnosePage() {
               }}
             />
           ) : (
-            <div className="flex h-48 items-center justify-center rounded-lg border border-dashed">
+             !state.pending && <div className="flex h-48 items-center justify-center rounded-lg border border-dashed">
               <p className="text-muted-foreground">
                 {t('diagnose.results.waiting')}
               </p>
@@ -152,3 +158,5 @@ export default function DiagnosePage() {
     </div>
   );
 }
+
+    

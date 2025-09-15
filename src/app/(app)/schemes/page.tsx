@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition, useEffect } from "react";
+import { useRef, useState, useEffect, useActionState } from "react";
 import { getSchemeAnalysis, type SchemeAnalysisState } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,7 @@ import { useToast } from "@/hooks/use-toast";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useLanguage } from "@/context/language-context";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { SubmitButton } from "@/components/submit-button";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -29,15 +30,34 @@ const initialState: SchemeAnalysisState = {};
 export default function SchemesPage() {
   const { toast } = useToast();
   const { t } = useLanguage();
+  const [state, formAction] = useActionState(getSchemeAnalysis, initialState);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [documentContent, setDocumentContent] = useState<string | null>(null);
   const [documentName, setDocumentName] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const userAvatar = PlaceHolderImages.find((img) => img.id === "user-avatar");
+
+  useEffect(() => {
+    if (state.error) {
+      toast({
+        variant: "destructive",
+        title: t('schemes.error.title'),
+        description: state.error,
+      });
+      // Revert user message on error
+      setMessages(messages => messages.slice(0, -1));
+    }
+    if (state.answer) {
+      setMessages(messages => [...messages, { role: 'assistant', content: state.answer! }]);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.answer, state.error, toast, t]);
+
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -51,7 +71,7 @@ export default function SchemesPage() {
     }
   }, [messages]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || !documentContent) {
         toast({
@@ -62,41 +82,20 @@ export default function SchemesPage() {
         return;
     }
 
-    const newMessages: Message[] = [...messages, { role: 'user', content: input }];
-    setMessages(newMessages);
+    setMessages([...messages, { role: 'user', content: input }]);
+
+    const formData = new FormData(formRef.current!);
+    formAction(formData);
+
     setInput("");
-
-    const formData = new FormData();
-    formData.append('query', input);
-    formData.append('documentContent', documentContent);
-    
-    startTransition(async () => {
-      const result = await getSchemeAnalysis(initialState, formData);
-
-      if (result.error) {
-        toast({
-          variant: "destructive",
-          title: t('schemes.error.title'),
-          description: result.error,
-        });
-        setMessages(newMessages);
-      }
-      if (result.answer) {
-        setMessages([...newMessages, { role: 'assistant', content: result.answer }]);
-      }
-    });
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // NOTE: This is a placeholder for actual PDF parsing.
-      // For a real application, you would use a library like pdf.js or pdf-parse
-      // on the client or server to extract text.
-      // For this prototype, we'll just use a mock text content.
       if (file.type === 'application/pdf') {
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = () => {
             const text = `This is a placeholder for the content of ${file.name}. In a real app, this would be the extracted text from the PDF.`;
             setDocumentContent(text);
             setDocumentName(file.name);
@@ -112,7 +111,7 @@ export default function SchemesPage() {
                 description: "There was an error reading the file.",
             });
         }
-        reader.readAsText(file); // Reading as text for this mock
+        reader.readAsText(file);
       } else {
          toast({
             variant: "destructive",
@@ -145,7 +144,7 @@ export default function SchemesPage() {
       <CardContent className="flex-1 overflow-hidden">
         <ScrollArea className="h-full" ref={scrollAreaRef}>
           <div className="space-y-6 pr-4">
-            {messages.length === 0 && !isPending && (
+            {messages.length === 0 && (
               <div className="flex h-full items-center justify-center rounded-lg border border-dashed py-24">
                 <div className="text-center">
                   <p className="text-muted-foreground">{t('schemes.results.waiting')}</p>
@@ -178,7 +177,7 @@ export default function SchemesPage() {
                 )}
               </div>
             ))}
-             {isPending && (
+             {state.pending && (
                 <div className="flex items-start gap-4">
                   <Avatar className="h-10 w-10 border-2 border-primary">
                     <AvatarFallback>
@@ -217,31 +216,39 @@ export default function SchemesPage() {
             </Alert>
           </div>
         )}
-        <form onSubmit={handleSubmit} className="flex gap-2">
+        <form ref={formRef} onSubmit={handleSubmit} className="flex gap-2">
+          <input
+            name="documentContent"
+            type="hidden"
+            value={documentContent || ""}
+          />
           <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="application/pdf" />
           <Button
             type="button"
             variant="outline"
             size="icon"
             onClick={() => fileInputRef.current?.click()}
-            disabled={isPending || !!documentName}
+            disabled={state.pending || !!documentName}
           >
             <Paperclip className="h-6 w-6" />
             <span className="sr-only">Attach PDF</span>
           </Button>
           <Input
+            name="query"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={t('schemes.placeholder')}
             className="flex-1 text-base"
-            disabled={isPending || !documentName}
+            disabled={state.pending || !documentName}
           />
-          <Button type="submit" size="icon" disabled={isPending || !input.trim() || !documentContent}>
+          <SubmitButton size="icon" disabled={!input.trim() || !documentContent}>
             <Send className="h-6 w-6" />
             <span className="sr-only">Send</span>
-          </Button>
+          </SubmitButton>
         </form>
       </div>
     </Card>
   );
 }
+
+    

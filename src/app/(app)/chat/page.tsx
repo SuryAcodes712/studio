@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useActionState } from "react";
 import Image from "next/image";
 import { getChatResponse, type ChatState } from "@/app/actions";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import { useLanguage } from "@/context/language-context";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { SubmitButton } from "@/components/submit-button";
 
 type Message = {
   role: 'user' | 'assistant';
@@ -37,13 +38,14 @@ if (typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSp
 export default function ChatPage() {
   const { toast } = useToast();
   const { t, language } = useLanguage();
+  const [state, formAction] = useActionState(getChatResponse, initialChatState);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [isPending, startTransition] = useTransition();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const docInputRef = useRef<HTMLInputElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   // State for uploaded file
   const [fileData, setFileData] = useState<string | null>(null);
@@ -57,6 +59,26 @@ export default function ChatPage() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    if (state.error) {
+      toast({
+        variant: "destructive",
+        title: t('chat.error.title'),
+        description: state.error,
+      });
+      // Revert user message on error
+      setMessages(messages => messages.slice(0, -1));
+    }
+    if (state.response) {
+      setMessages(messages => [...messages, { role: 'assistant', content: state.response!, audioDataUri: state.audioDataUri }]);
+        if (state.audioDataUri && audioRef.current) {
+            audioRef.current.src = state.audioDataUri;
+            audioRef.current.play().catch(e => console.error("Audio playback failed:", e));
+        }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.response, state.error, state.audioDataUri, toast, t]);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -182,7 +204,7 @@ export default function ChatPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() && !fileData) return;
 
@@ -199,51 +221,20 @@ export default function ChatPage() {
         userMessage.fileName = fileName;
     }
 
-    const newMessages: Message[] = [...messages, userMessage];
-    setMessages(newMessages);
-    setInput("");
+    setMessages([...messages, userMessage]);
     
-    const currentFileData = fileData;
-    const currentFileType = fileType;
+    const formData = new FormData(formRef.current!);
+    formAction(formData);
+
+    setInput("");
     handleRemoveFile();
-
-    startTransition(async () => {
-        const formData = new FormData();
-        formData.append('query', input);
-        formData.append('language', language);
-
-        if (currentFileType === 'pdf' && currentFileData) {
-            formData.append('documentContent', currentFileData);
-        } else if (currentFileType === 'image' && currentFileData) {
-            formData.append('photoDataUri', currentFileData);
-        }
-      
-      const responseState = await getChatResponse(initialChatState, formData);
-
-      if (responseState?.error) {
-        toast({
-          variant: "destructive",
-          title: t('chat.error.title'),
-          description: responseState.error,
-        });
-        setMessages(newMessages); // Revert to user message only
-      }
-
-      if (responseState?.response) {
-        setMessages([...newMessages, { role: 'assistant', content: responseState.response, audioDataUri: responseState.audioDataUri }]);
-        if (responseState.audioDataUri && audioRef.current) {
-            audioRef.current.src = responseState.audioDataUri;
-            audioRef.current.play().catch(e => console.error("Audio playback failed:", e));
-        }
-      }
-    });
   };
 
   return (
     <div className="flex flex-col h-full w-full">
       <ScrollArea className="flex-1" ref={scrollAreaRef}>
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-          {messages.length === 0 && !isPending && (
+          {messages.length === 0 && !state.pending && (
             <div className="flex flex-col items-center justify-center h-full text-center pt-24">
               <Avatar className="h-16 w-16 mb-4 bg-primary text-primary-foreground">
                 <AvatarFallback><Sparkles className="h-8 w-8"/></AvatarFallback>
@@ -293,7 +284,7 @@ export default function ChatPage() {
               )}
             </div>
           ))}
-          {isPending && (
+          {state.pending && (
             <div className="flex items-start gap-4">
               <Avatar className="h-10 w-10 border-2 border-primary">
                 <AvatarFallback>
@@ -335,7 +326,11 @@ export default function ChatPage() {
             </Alert>
           </div>
         )}
-        <form onSubmit={handleSubmit} className="flex gap-2 items-center bg-muted/50 border rounded-full p-1 pl-3">
+        <form ref={formRef} onSubmit={handleSubmit} className="flex gap-2 items-center bg-muted/50 border rounded-full p-1 pl-3">
+          <input name="language" type="hidden" value={language} />
+          <input name="photoDataUri" type="hidden" value={fileType === 'image' ? fileData ?? "" : ""} />
+          <input name="documentContent" type="hidden" value={fileType === 'pdf' ? fileData ?? "" : ""} />
+
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -343,7 +338,7 @@ export default function ChatPage() {
                 variant="ghost"
                 size="icon"
                 className="rounded-full flex-shrink-0"
-                disabled={isPending}
+                disabled={state.pending}
               >
                 <Plus className="h-5 w-5" />
                 <span className="sr-only">Attach file</span>
@@ -375,11 +370,12 @@ export default function ChatPage() {
           <input type="file" ref={docInputRef} onChange={handleFileChange} className="hidden" accept="application/pdf" />
           
           <Input
+            name="query"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={isListening ? "Listening..." : t('chat.placeholder')}
             className="flex-1 text-base bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
-            disabled={isPending}
+            disabled={state.pending}
           />
         {isClient && recognition && (
           <Button
@@ -388,19 +384,21 @@ export default function ChatPage() {
             size="icon"
             className="rounded-full flex-shrink-0"
             onClick={handleVoiceRecording}
-            disabled={isPending}
+            disabled={state.pending}
           >
             {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
             <span className="sr-only">{isListening ? "Stop listening" : "Start listening"}</span>
           </Button>
         )}
-          <Button type="submit" size="icon" className="rounded-full flex-shrink-0" disabled={isPending || (!input.trim() && !fileData)}>
+          <SubmitButton size="icon" className="rounded-full flex-shrink-0" disabled={!input.trim() && !fileData}>
             <Send className="h-5 w-5" />
             <span className="sr-only">Send</span>
-          </Button>
+          </SubmitButton>
         </form>
       </div>
       <audio ref={audioRef} className="hidden" />
     </div>
   );
 }
+
+    
