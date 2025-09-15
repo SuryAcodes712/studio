@@ -17,7 +17,10 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
+  useSidebar,
 } from "@/components/ui/sidebar";
+import { SheetTitle } from "@/components/ui/sheet";
+import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/language-context";
 
@@ -34,6 +37,7 @@ const navIcons = {
 export function AppSidebar() {
   const pathname = usePathname();
   const { t } = useLanguage();
+  const { isMobile } = useSidebar();
   const navItems: any[] = t('nav', { returnObjects: true });
 
   return (
@@ -43,6 +47,11 @@ export function AppSidebar() {
           <Leaf className="h-8 w-8" />
           <span>{t('name')}</span>
         </Link>
+         {isMobile && (
+          <VisuallyHidden>
+              <SheetTitle>Main Navigation</SheetTitle>
+          </VisuallyHidden>
+         )}
       </SidebarHeader>
       <SidebarMenu>
         {navItems.map((item) => {
