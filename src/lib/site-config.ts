@@ -153,7 +153,7 @@ const translations = {
         languageName: "हिंदी",
         nav: [
             { id: 'chat', href: "/chat", label: "बातचीत" },
-            { id: 'dashboard', href: "/dashboard", label: "tableau" },
+            { id: 'dashboard', href: "/dashboard", label: "डैशबोर्ड" },
             { id: 'diagnose', href: "/diagnose", label: "निदान" },
             { id: 'library', href: "/library", label: "पुस्तकालय" },
             { id: 'history', href: "/history", label: "इतिहास" },
