@@ -15,15 +15,14 @@ export default function AppLayout({
   const pathname = usePathname();
   const { t } = useLanguage();
   
-  const navItems: any[] = t('nav', { returnObjects: true });
-  const navItem = navItems.find(item => item.href === pathname);
-  const title = navItem ? navItem.label : t('nav.0.label');
+  const navItems: {id: string; href: string; label: string}[] = t('nav', { returnObjects: true });
+  const title = navItems.find(item => item.href === pathname)?.label ?? t('nav.0.label');
 
   return (
     <SidebarProvider>
       <div className="flex h-screen w-full overflow-hidden">
         <AppSidebar />
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col min-w-0">
            <AppHeader title={title} />
           <SidebarInset>
             <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
